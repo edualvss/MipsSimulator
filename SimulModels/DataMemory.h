@@ -87,10 +87,11 @@ private:
 public:
 
     // Interface
-    sc_in<bool>          i_WR_ENABLE; // Write enable
-    sc_in<bool>          i_RD_ENABLE; // Read enable
+    sc_in<bool>           i_CLK;       // Clock
+    sc_in<bool>           i_WR_ENABLE; // Write enable
+    sc_in<bool>           i_RD_ENABLE; // Read enable
     sc_in<sc_uint<32> >   i_DATA_IN;   // Input data channel
-    sc_in<sc_uint<32> >  i_ADDRESS;   // Address channel
+    sc_in<sc_uint<32> >   i_ADDRESS;   // Address channel
     sc_out<sc_uint<32> >  o_DATA_OUT;  // Output data channel
 
     // Internal data structure for memory

@@ -15,7 +15,8 @@ DataMemory::DataMemory(sc_module_name mn) : sc_module(mn) {
 
     SC_METHOD(p_write);
     dont_initialize();
-    sensitive << i_ADDRESS << i_WR_ENABLE;
+    sensitive << i_CLK.pos();
+//    sensitive << i_ADDRESS << i_WR_ENABLE;
 
     SC_METHOD(p_read);
     dont_initialize();

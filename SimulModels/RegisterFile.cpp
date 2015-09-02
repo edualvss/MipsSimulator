@@ -23,11 +23,13 @@ RegisterFile::RegisterFile(sc_module_name mn) : sc_module(mn) {
     std::cout << "Constructor RegisterFile" << std::endl;
 #endif
 
-    SC_METHOD(p_update);
+    SC_METHOD(p_read);
     dont_initialize();
-    sensitive << i_WR_ENABLE << i_RD_ADDRESS_0   \
-              << i_RD_ADDRESS_1 << i_WR_ADDRESS  \
-              << i_DATA_IN;
+    sensitive << i_RD_ADDRESS_0 << i_RD_ADDRESS_1;
+
+    SC_METHOD(p_write);
+    dont_initialize();
+    sensitive << i_CLK.pos();
 
     for( int i = 0; i < 32; i++ ) {
         m_REGISTERS[i] = 0;
@@ -37,10 +39,22 @@ RegisterFile::RegisterFile(sc_module_name mn) : sc_module(mn) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void RegisterFile::p_update() {
+void RegisterFile::p_read() {
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef DEBUG_METHODS
-    std::cout << "RegisterFile::p_update" << std::endl;
+    std::cout << "RegisterFile::p_read" << std::endl;
+#endif
+
+    o_DATA_OUT_0.write( m_REGISTERS[i_RD_ADDRESS_0.read()] );
+    o_DATA_OUT_1.write( m_REGISTERS[i_RD_ADDRESS_1.read()] );
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void RegisterFile::p_write() {
+////////////////////////////////////////////////////////////////////////////////
+#ifdef DEBUG_METHODS
+    std::cout << "RegisterFile::p_write" << std::endl;
 #endif
 
     if( i_WR_ENABLE.read() ) {
@@ -48,11 +62,7 @@ void RegisterFile::p_update() {
         m_REGISTERS[i_WR_ADDRESS.read()] = i_DATA_IN.read();
     }
 
-    o_DATA_OUT_0.write( m_REGISTERS[i_RD_ADDRESS_0.read()] );
-    o_DATA_OUT_1.write( m_REGISTERS[i_RD_ADDRESS_1.read()] );
-
 }
-
 sc_uint<32>* RegisterFile::getRegistersValues() {
 #ifdef DEBUG_METHODS
     std::cout << "RegisterFile::getRegistersValues" << std::endl;

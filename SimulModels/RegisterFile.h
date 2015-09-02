@@ -28,11 +28,11 @@ public:
     static const std::string REG_NAMES[32];
 
     // Interface
-//    sc_in<bool>          i_CLK;         // Clock
-    sc_in<bool>         i_WR_ENABLE;   // Input Write enable
-    sc_in<sc_uint<5> >  i_RD_ADDRESS_0;// Input Read address 0 (RS field)
-    sc_in<sc_uint<5> >  i_RD_ADDRESS_1;// Input Read address 1 (RT field)
-    sc_in<sc_uint<5> >  i_WR_ADDRESS;  // Input Write address (RD field)
+    sc_in<bool>          i_CLK;         // Clock
+    sc_in<bool>          i_WR_ENABLE;   // Input Write enable
+    sc_in<sc_uint<5> >   i_RD_ADDRESS_0;// Input Read address 0 (RS field)
+    sc_in<sc_uint<5> >   i_RD_ADDRESS_1;// Input Read address 1 (RT field)
+    sc_in<sc_uint<5> >   i_WR_ADDRESS;  // Input Write address (RD field)
     sc_in<sc_uint<32> >  i_DATA_IN;     // Input Data
     sc_out<sc_uint<32> > o_DATA_OUT_0;  // Output Data 0
     sc_out<sc_uint<32> > o_DATA_OUT_1;  // Output Data 1
@@ -41,7 +41,8 @@ public:
     sc_uint<32> m_REGISTERS[32];       // Register file
 
     // Module's process
-    void p_update();
+    void p_read();
+    void p_write();
 
     // Auxiliar member functions
     int getPosition(std::string );

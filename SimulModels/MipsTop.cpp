@@ -71,6 +71,7 @@ Mips::Mips(sc_module_name mn, const char* instructionMem,const char* dataMem) : 
 
     ///////// Register File /////////
     c_RegFile = new RegisterFile("RegisterFile");
+    c_RegFile->i_CLK(i_CLK);
     c_RegFile->i_DATA_IN(w_DATA_IN_REG_FILE);
     c_RegFile->i_RD_ADDRESS_0(w_RS);
     c_RegFile->i_RD_ADDRESS_1(w_RT);
@@ -97,7 +98,9 @@ Mips::Mips(sc_module_name mn, const char* instructionMem,const char* dataMem) : 
 
     ///////// Data Memory /////////
     c_DataMemory = new DataMemory("DataMemory");
-//    c_DataMemory->initialize(dataMem);
+    c_DataMemory->initialize(dataMem);
+    c_DataMemory->debug();
+    c_DataMemory->i_CLK(i_CLK);
     c_DataMemory->i_ADDRESS(w_ALU_OUT);
     c_DataMemory->i_DATA_IN(w_DATA_OUT_B_REG_FILE);
     c_DataMemory->i_RD_ENABLE(w_MEM_READ);
@@ -167,6 +170,13 @@ void Mips::p_signExtend() {
     sc_uint<32> v_SIGN_EXTENDED;
     v_SIGN_EXTENDED.range(15,0) = w_IMED16.read();
     v_SIGN_EXTENDED(31,16) = v_SIGN_EXTENDED[15];
+
+    sc_uint<6> v_OP;
+    v_OP = w_OP.read();
+
+    if(v_OP == 0b001111) { // to lui - Load Upper Immediate
+        v_SIGN_EXTENDED = v_SIGN_EXTENDED << 16;
+    }
 
     w_ALU_SIGN_EXTENDED.write(v_SIGN_EXTENDED);
 }
