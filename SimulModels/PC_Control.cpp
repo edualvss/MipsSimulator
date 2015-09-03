@@ -24,7 +24,7 @@ void PC_Control::p_update() {
     v_NEXT_PC += 4;
     v_IMED26 = i_IMED26.read();
 
-    if( i_DVI.read() == 1 ) { // Inconditional
+    if( i_DVI.read() == 1 ) { // Unconditional
         v_OUT.range(31,28) = v_NEXT_PC(31,28);
         v_OUT.range(27,0) = v_IMED26 << 2; // Shift left 2 positions
     } else {

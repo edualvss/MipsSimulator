@@ -19,7 +19,7 @@ int sc_main(int , char**) {
     tb->i_CLK(w_CLK);
     tb->o_RST(w_RST);
 
-    Mips* mips = new Mips("MipsMono","tests/InsEx2.txt","tests/DataEx2.txt");
+    Mips* mips = new Mips("MipsMono","tests/InsEx3.txt","");
     mips->i_CLK(w_CLK);
     mips->i_RST(w_RST);
 
@@ -75,11 +75,13 @@ int sc_main(int , char**) {
     sc_start(clockTime,SC_NS);
     mips->c_RegFile->debug();
 
-    mips->c_DataMemory->debug();
+    std::cout << "\n\nCiclo 7!" << std::endl;
+    sc_start(clockTime,SC_NS);
+    mips->c_RegFile->debug();
 
-//    std::cout << "\n\nCiclo 7!" << std::endl;
-//    sc_start(clockTime,SC_NS);
-//    mips->c_RegFile->debug();
+    std::cout << "\n\nCiclo 8!" << std::endl;
+    sc_start(clockTime,SC_NS);
+    mips->c_RegFile->debug();
 
 
     delete tb;

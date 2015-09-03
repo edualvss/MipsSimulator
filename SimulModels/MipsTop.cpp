@@ -174,7 +174,7 @@ void Mips::p_signExtend() {
     sc_uint<6> v_OP;
     v_OP = w_OP.read();
 
-    if(v_OP == 0b001111) { // to lui - Load Upper Immediate
+    if(v_OP == 0b001111) { // lui - Load Upper Immediate
         v_SIGN_EXTENDED = v_SIGN_EXTENDED << 16;
     }
 
@@ -186,8 +186,18 @@ void Mips::p_branch() {
     std::cout << "Mips::p_branch" << std::endl;
 #endif
 
-    w_BRANCH_RESULT.write( (w_BRANCH.read() and w_ALU_ZERO.read() ) );
+    sc_uint<6> v_OP;
+    v_OP = w_OP.read();
 
+    bool result;
+
+    if( v_OP == 0b000101 ) { // bne - Branch on not equal
+        result = (w_BRANCH.read() and !w_ALU_ZERO.read() );
+    } else { // beq - Branch on equal
+        result = (w_BRANCH.read() and w_ALU_ZERO.read() );
+
+    }
+    w_BRANCH_RESULT.write( result );
 }
 
 

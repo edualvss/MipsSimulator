@@ -35,6 +35,7 @@ void Control::p_control(){
     bool v_DATA_LW;
     bool v_DATA_SW;
     bool v_DATA_BEQ;
+    bool v_DATA_BNE;
     bool v_DATA_DVI;
     bool v_DATA_ADDI;
     bool v_DATA_LUI;
@@ -46,6 +47,7 @@ void Control::p_control(){
     v_DATA_LW = (v_DATA_IN[5] and !v_DATA_IN[4] and !v_DATA_IN[3] and !v_DATA_IN[2] and v_DATA_IN[1] and v_DATA_IN[0]);
     v_DATA_SW = (v_DATA_IN[5] and !v_DATA_IN[4] and v_DATA_IN[3] and !v_DATA_IN[2] and v_DATA_IN[1] and v_DATA_IN[0]);
     v_DATA_BEQ = (!v_DATA_IN[5] and !v_DATA_IN[4] and !v_DATA_IN[3] and v_DATA_IN[2] and !v_DATA_IN[1] and !v_DATA_IN[0]);
+    v_DATA_BNE = (!v_DATA_IN[5] and !v_DATA_IN[4] and !v_DATA_IN[3] and v_DATA_IN[2] and !v_DATA_IN[1] and v_DATA_IN[0]);
     v_DATA_DVI = (!v_DATA_IN[5] and !v_DATA_IN[4] and !v_DATA_IN[3] and !v_DATA_IN[2] and v_DATA_IN[1] and !v_DATA_IN[0]);
     v_DATA_ADDI = (!v_DATA_IN[5] and !v_DATA_IN[4] and v_DATA_IN[3] and !v_DATA_IN[2] and !v_DATA_IN[1] and !v_DATA_IN[0]);
     v_DATA_LUI = (!v_DATA_IN[5] and !v_DATA_IN[4] and v_DATA_IN[3] and v_DATA_IN[2] and v_DATA_IN[1] and v_DATA_IN[0]);
@@ -57,11 +59,11 @@ void Control::p_control(){
     o_DATA_REG_WRITE.write(v_DATA_R_FORMAT or v_DATA_LW or v_DATA_ADDI or v_DATA_LUI or v_DATA_ORI);
     o_DATA_MEM_READ.write(v_DATA_LW);
     o_DATA_MEM_WRITE.write(v_DATA_SW);
-    o_DATA_BRANCH.write(v_DATA_BEQ);
+    o_DATA_BRANCH.write(v_DATA_BEQ or v_DATA_BNE);
     o_DATA_DVI.write(v_DATA_DVI);
 
     v_DATA_ALU_OP[1] = v_DATA_R_FORMAT;
-    v_DATA_ALU_OP[0] = v_DATA_BEQ;
+    v_DATA_ALU_OP[0] = v_DATA_BEQ or v_DATA_BNE;
 
     o_DATA_ALU_OP.write(v_DATA_ALU_OP);
 

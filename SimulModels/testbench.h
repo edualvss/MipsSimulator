@@ -22,6 +22,7 @@ SC_MODULE(Testbench) {
         wait();
         wait();
         wait();
+        wait();
 //        wait();
 //        wait();
 //        wait();
