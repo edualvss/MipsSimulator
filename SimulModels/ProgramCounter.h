@@ -23,6 +23,8 @@ using namespace sc_dt;
 #define INITIAL_PC_ADDRESS 0x00400000   // Initial PC Address
 
 class ProgramCounter : public sc_module {
+private:
+    unsigned int lastAddress;
 public:
     // Interface
     sc_in<bool>          i_CLK;         // Clock
@@ -33,8 +35,10 @@ public:
     // Module's process
     void p_PC();
 
+    bool simulationEnded;
+
     SC_HAS_PROCESS(ProgramCounter);
-    ProgramCounter(sc_module_name);
+    ProgramCounter(sc_module_name,unsigned int lastAddress);
 
 };
 

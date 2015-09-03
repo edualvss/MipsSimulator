@@ -31,6 +31,10 @@ public:
     sc_in<sc_uint<32> >  i_DATA_ADDRESS;     // Input address
     sc_out<sc_uint<32> > o_DATA_INSTRUCTION; // Output data instruction
 
+    // Auxiliar data with last instruction address
+    unsigned int lastAddress;
+
+
     // Auxiliar member function
     bool initialize(const char* filename);
     std::vector<sc_uint<32> > getInstructions();

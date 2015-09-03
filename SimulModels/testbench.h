@@ -10,24 +10,15 @@ SC_MODULE(Testbench) {
 
     void process() {
 #ifdef DEBUG_METHODS
-    cout << "Main" << std::endl;
+    std::cout << "Testbench::process" << std::endl;
 #endif
 
         o_RST.write(1);
         wait();
         o_RST.write(0);
-        wait();
-        wait();
-        wait();
-        wait();
-        wait();
-        wait();
-        wait();
-//        wait();
-//        wait();
-//        wait();
-
-        sc_stop();
+        while(1) {
+            wait();
+        }
     }
 
     SC_CTOR(Testbench) {

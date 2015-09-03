@@ -16,11 +16,10 @@ DataMemory::DataMemory(sc_module_name mn) : sc_module(mn) {
     SC_METHOD(p_write);
     dont_initialize();
     sensitive << i_CLK.pos();
-//    sensitive << i_ADDRESS << i_WR_ENABLE;
 
     SC_METHOD(p_read);
     dont_initialize();
-    sensitive << i_ADDRESS << i_RD_ENABLE;
+    sensitive <<i_ADDRESS << i_RD_ENABLE;
 
 }
 
@@ -31,9 +30,19 @@ void DataMemory::p_read() {
     std::cout << "DataMemory::p_read" << std::endl;
 #endif
 
-    if( i_RD_ENABLE.read() ) {
-        o_DATA_OUT.write( m_DATA.at(i_ADDRESS.read()) );
+    if( i_RD_ENABLE.read() == 1 ) {
+//        std::map<unsigned int, sc_uint<32> >::iterator it;
+//        it = m_DATA.find(i_ADDRESS.read());
+//        if(it != m_DATA.end()) {
+//            o_DATA_OUT.write( it->second );
+//        } else {
+//            o_DATA_OUT.write( 0 );
+//        }
+        o_DATA_OUT.write( m_DATA.find(i_ADDRESS.read())->second );
+    } else {
+        o_DATA_OUT.write(0);
     }
+
 
 }
 

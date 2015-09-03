@@ -24,18 +24,18 @@ Mips::Mips(sc_module_name mn, const char* instructionMem,const char* dataMem) : 
     dont_initialize();
     sensitive << w_ALU_ZERO << w_BRANCH;
 
-    ///////// Program Counter /////////
-    c_PC = new ProgramCounter("PC");
-    c_PC->i_CLK(i_CLK);
-    c_PC->i_DATA_IN(w_PC_IN);
-    c_PC->i_RST(i_RST);
-    c_PC->o_DATA_OUT(w_PC_OUT);
-
     ///////// Instruction Memory /////////
     c_InstructionMemory = new InstructionMemory("InstructionMemory");
     c_InstructionMemory->initialize(instructionMem);
     c_InstructionMemory->i_DATA_ADDRESS(w_PC_OUT);
     c_InstructionMemory->o_DATA_INSTRUCTION(w_INSTRUCTION);
+
+    ///////// Program Counter /////////
+    c_PC = new ProgramCounter("PC",c_InstructionMemory->lastAddress);
+    c_PC->i_CLK(i_CLK);
+    c_PC->i_DATA_IN(w_PC_IN);
+    c_PC->i_RST(i_RST);
+    c_PC->o_DATA_OUT(w_PC_OUT);
 
     ///////// Decoder /////////
     c_Decoder = new Decoder("InstructionDecoder");

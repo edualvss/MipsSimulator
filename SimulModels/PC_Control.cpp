@@ -8,7 +8,6 @@ PC_Control::PC_Control(sc_module_name mn) : sc_module(mn) {
     SC_METHOD(p_update);
     dont_initialize();
     sensitive << i_DVI << i_DVC << i_PC << i_IMED26;
-
 }
 
 void PC_Control::p_update() {

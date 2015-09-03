@@ -5,7 +5,6 @@ CONFIG -= qt
 
 HEADERS += \
     SimulModels/ProgramCounter.h \
-    SimulModels/testbench.h \
     SimulModels/RegisterFile.h \
     SimulModels/InstructionMemory.h \
     SimulModels/Control.h \
@@ -15,7 +14,8 @@ HEADERS += \
     SimulModels/Mux2x1.h \
     SimulModels/Alu.h \
     SimulModels/PC_Control.h \
-    SimulModels/MipsTop.h
+    SimulModels/MipsTop.h \
+    SimulModels/Testbench.h
 
 SOURCES += main.cpp \
     SimulModels/ProgramCounter.cpp \

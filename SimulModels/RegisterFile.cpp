@@ -34,6 +34,7 @@ RegisterFile::RegisterFile(sc_module_name mn) : sc_module(mn) {
     for( int i = 0; i < 32; i++ ) {
         m_REGISTERS[i] = 0;
     }
+    m_REGISTERS[28] = 0x10008000; // $gp = global pointer
     m_REGISTERS[29] = 0x7fffeffc; // $sp = Stack pointer
 
 }
@@ -58,7 +59,6 @@ void RegisterFile::p_write() {
 #endif
 
     if( i_WR_ENABLE.read() ) {
-        // TODO Emitir aviso de alteração de valor
         m_REGISTERS[i_WR_ADDRESS.read()] = i_DATA_IN.read();
     }
 

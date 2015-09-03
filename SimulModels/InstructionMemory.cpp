@@ -67,6 +67,8 @@ bool InstructionMemory::initialize(const char *filename) {
 
     m_MEMORY.pop_back();
 
+    lastAddress = (m_MEMORY.size() - 1) * 4 + INITIAL_PC_ADDRESS;
+
     return true;
 }
 
