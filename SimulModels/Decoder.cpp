@@ -82,8 +82,8 @@ Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
      *   000000  | sll         | Shift left logical
      *   000010  | srl         | Shift right logival
      *   001000  | jr          | Jump register
-     *   001100  | syscall     | Issue a system call (not implemented)
-     *   001101  | break       | Break execution: Terminate program execution with exception (not implemented, but maybe needed to end simulation)
+     *   001100  | syscall     | % Issue a system call (not implemented)
+     *   001101  | break       | % Break execution Terminate program execution with exception (not implemented)
      *   100000  | add         | Addition with overflow
      *   100011  | sub         | Subtraction with overflow
      *   100100  | and         | Bitwise AND
@@ -91,6 +91,7 @@ Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
      *   100110  | xor         | Bitwise XOR
      *   100111  | nor or (not)| Bitwise NOR (maybe bit inversion)
      *
+     *  % Not implemented
      */
     sc_uint<32> v_INS;
     v_INS = instruction;

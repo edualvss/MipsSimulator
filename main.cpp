@@ -19,25 +19,33 @@ int sc_main(int , char**) {
     tb->i_CLK(w_CLK);
     tb->o_RST(w_RST);
 
-    Mips* mips = new Mips("MipsMono","tests/InsEx5.txt","tests/DataEx5.txt");
+    Mips* mips = new Mips("MipsMono","tests/InsSumMat.txt","tests/DataSumMat.txt");
     mips->i_CLK(w_CLK);
     mips->i_RST(w_RST);
 
-//    sc_start();
+    sc_start();
+    mips->c_RegFile->debug();
+    mips->c_DataMemory->debug();
+
+
+    // TODO Instruções para serem verificadas e talvez implementadas
+    /*
+     * jal
+     *
+     * R-format
+     * jr
+     **/
+//    std::cout << "\nInicio!" << std::endl;
+//    sc_start(SC_ZERO_TIME);
+//    sc_start(clockTime/2,SC_NS);
 //    mips->c_RegFile->debug();
 
-
-    std::cout << "Inicio!" << std::endl;
-    sc_start(SC_ZERO_TIME);
-    sc_start(clockTime/2,SC_NS);
-    mips->c_RegFile->debug();
-
-    int numPassos = 45;
-    for( int i = 1; i <= numPassos; i++  ) {
-        std::cout << "\n\nCiclo " << i << "!" << std::endl;
-        sc_start(clockTime,SC_NS);
-        mips->c_RegFile->debug();
-    }
+//    int numPassos = 10;
+//    for( int i = 1; i <= numPassos; i++  ) {
+//        std::cout << "\n\nCiclo " << i << "!" << std::endl;
+//        sc_start(clockTime,SC_NS);
+//        mips->c_RegFile->debug();
+//    }
 
     delete tb;
     delete mips;

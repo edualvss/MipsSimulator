@@ -38,7 +38,8 @@ public:
     sc_out<sc_uint<32> > o_DATA_OUT_1;  // Output Data 1
 
     // Registers
-    sc_uint<32> m_REGISTERS[32];       // Register file
+    sc_uint<32> m_REGISTERS[32]; // Register file
+    sc_event e_WRITE;            // Write event, to read update
 
     // Module's process
     void p_read();

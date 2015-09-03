@@ -24,12 +24,14 @@ using namespace sc_dt;
 class Alu : public sc_module {
 public:
     // Interface
-    sc_in<sc_uint<6> >   i_FUNCTION;  // Instruction[5..0]
-    sc_in<sc_uint<2> >   i_DATA_OP;   // Alu operation
-    sc_in<sc_uint<32> >  i_DATA_A;    // Input A
-    sc_in<sc_uint<32> >  i_DATA_B;    // Input B
-    sc_out<bool>         o_DATA_ZERO; // Output Zero
-    sc_out<sc_uint<32> > o_DATA_OUT;  // Data Output
+    sc_in<sc_uint<6> >   i_OPCODE;       // Instruction Opcode
+    sc_in<sc_uint<5> >   i_SHAMT;        // Shift amount
+    sc_in<sc_uint<6> >   i_FUNCTION;     // Instruction[5..0]
+    sc_in<sc_uint<2> >   i_DATA_OP;      // Alu operation
+    sc_in<sc_uint<32> >  i_DATA_A;       // Input A
+    sc_in<sc_uint<32> >  i_DATA_B;       // Input B
+    sc_out<bool>         o_DATA_ZERO;    // Output Zero
+    sc_out<sc_uint<32> > o_DATA_OUT;     // Data Output
 
     // Internal data structures
     sc_signal<sc_uint<4> > w_ALU_OP;

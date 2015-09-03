@@ -23,10 +23,6 @@ RegisterFile::RegisterFile(sc_module_name mn) : sc_module(mn) {
     std::cout << "Constructor RegisterFile" << std::endl;
 #endif
 
-    SC_METHOD(p_read);
-    dont_initialize();
-    sensitive << i_RD_ADDRESS_0 << i_RD_ADDRESS_1;
-
     SC_METHOD(p_write);
     dont_initialize();
     sensitive << i_CLK.pos();
@@ -36,6 +32,10 @@ RegisterFile::RegisterFile(sc_module_name mn) : sc_module(mn) {
     }
     m_REGISTERS[28] = 0x10008000; // $gp = global pointer
     m_REGISTERS[29] = 0x7fffeffc; // $sp = Stack pointer
+
+    SC_METHOD(p_read);
+    dont_initialize();
+    sensitive << i_RD_ADDRESS_0 << i_RD_ADDRESS_1 << e_WRITE;
 
 }
 
@@ -60,6 +60,7 @@ void RegisterFile::p_write() {
 
     if( i_WR_ENABLE.read() ) {
         m_REGISTERS[i_WR_ADDRESS.read()] = i_DATA_IN.read();
+        e_WRITE.notify();
     }
 
 }
@@ -67,6 +68,7 @@ sc_uint<32>* RegisterFile::getRegistersValues() {
 #ifdef DEBUG_METHODS
     std::cout << "RegisterFile::getRegistersValues" << std::endl;
 #endif
+
     return m_REGISTERS;
 }
 

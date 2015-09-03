@@ -38,8 +38,11 @@ void Control::p_control(){
     bool v_DATA_BNE;
     bool v_DATA_DVI;
     bool v_DATA_ADDI;
-    bool v_DATA_LUI;
+    bool v_DATA_ANDI;
     bool v_DATA_ORI;
+    bool v_DATA_XORI;
+    bool v_DATA_SLTI;
+    bool v_DATA_LUI;
 
     v_DATA_IN = i_DATA_OP.read();
 
@@ -50,13 +53,16 @@ void Control::p_control(){
     v_DATA_BNE = (!v_DATA_IN[5] and !v_DATA_IN[4] and !v_DATA_IN[3] and v_DATA_IN[2] and !v_DATA_IN[1] and v_DATA_IN[0]);
     v_DATA_DVI = (!v_DATA_IN[5] and !v_DATA_IN[4] and !v_DATA_IN[3] and !v_DATA_IN[2] and v_DATA_IN[1] and !v_DATA_IN[0]);
     v_DATA_ADDI = (!v_DATA_IN[5] and !v_DATA_IN[4] and v_DATA_IN[3] and !v_DATA_IN[2] and !v_DATA_IN[1] and !v_DATA_IN[0]);
-    v_DATA_LUI = (!v_DATA_IN[5] and !v_DATA_IN[4] and v_DATA_IN[3] and v_DATA_IN[2] and v_DATA_IN[1] and v_DATA_IN[0]);
+    v_DATA_ANDI = (!v_DATA_IN[5] and !v_DATA_IN[4] and v_DATA_IN[3] and v_DATA_IN[2] and !v_DATA_IN[1] and !v_DATA_IN[0]);
     v_DATA_ORI = (!v_DATA_IN[5] and !v_DATA_IN[4] and v_DATA_IN[3] and v_DATA_IN[2] and !v_DATA_IN[1] and v_DATA_IN[0]);
+    v_DATA_XORI = (!v_DATA_IN[5] and !v_DATA_IN[4] and v_DATA_IN[3] and v_DATA_IN[2] and v_DATA_IN[1] and !v_DATA_IN[0]);
+    v_DATA_SLTI = (!v_DATA_IN[5] and !v_DATA_IN[4] and v_DATA_IN[3] and !v_DATA_IN[2] and v_DATA_IN[1] and !v_DATA_IN[0]);
+    v_DATA_LUI = (!v_DATA_IN[5] and !v_DATA_IN[4] and v_DATA_IN[3] and v_DATA_IN[2] and v_DATA_IN[1] and v_DATA_IN[0]);
 
     o_DATA_REG_DST.write(v_DATA_R_FORMAT);
-    o_DATA_ALU_SRC.write(v_DATA_LW or v_DATA_SW or v_DATA_ADDI or v_DATA_LUI or v_DATA_ORI);
+    o_DATA_ALU_SRC.write(v_DATA_LW or v_DATA_SW or v_DATA_ADDI or v_DATA_LUI or v_DATA_ORI or v_DATA_SLTI or v_DATA_ANDI or v_DATA_XORI);
     o_DATA_MEM_TO_REG.write(v_DATA_LW);
-    o_DATA_REG_WRITE.write(v_DATA_R_FORMAT or v_DATA_LW or v_DATA_ADDI or v_DATA_LUI or v_DATA_ORI);
+    o_DATA_REG_WRITE.write(v_DATA_R_FORMAT or v_DATA_LW or v_DATA_ADDI or v_DATA_LUI or v_DATA_ORI or v_DATA_SLTI or v_DATA_ANDI or v_DATA_XORI);
     o_DATA_MEM_READ.write(v_DATA_LW);
     o_DATA_MEM_WRITE.write(v_DATA_SW);
     o_DATA_BRANCH.write(v_DATA_BEQ or v_DATA_BNE);

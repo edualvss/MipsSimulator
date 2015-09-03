@@ -89,6 +89,8 @@ Mips::Mips(sc_module_name mn, const char* instructionMem,const char* dataMem) : 
 
     ///////// ALU /////////
     c_ALU = new Alu("Alu");
+    c_ALU->i_OPCODE(w_OP);
+    c_ALU->i_SHAMT(w_SHAMT);
     c_ALU->i_DATA_A(w_DATA_OUT_A_REG_FILE);
     c_ALU->i_DATA_B(w_ALU_B_INPUT);
     c_ALU->i_DATA_OP(w_ALU_OP);
