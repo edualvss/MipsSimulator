@@ -47,12 +47,16 @@ public:
     DataMemory* c_DataMemory;
     Alu* c_ALU;
     Mux2x1_5bit* c_MuxInputRegFile;
+    Mux2x1_5bit* c_MuxJalAddressRegFile;
     Mux2x1_32bit* c_MuxInputAluB;
     Mux2x1_32bit* c_MuxWriteBack;
+    Mux2x1_32bit* c_MuxJalDataRegFile;
 
     // Internal wires
     // PC_Control -> PC -> Instruction Memory  //
     sc_signal<sc_uint<32> > w_PC_IN;
+    sc_signal<sc_uint<32> > w_PC_PLUS4;
+    sc_signal<bool>         w_JR;
     sc_signal<sc_uint<32> > w_PC_OUT;
     // Instruction Memory -> Decoder ...
     sc_signal<sc_uint<32> > w_INSTRUCTION;
@@ -75,20 +79,24 @@ public:
     sc_signal<bool>         w_MEM_WRITE;
     sc_signal<bool>         w_ALU_SRC;
     sc_signal<bool>         w_REG_WRITE;
+    sc_signal<bool>         w_JAL;
     // Register File
-    sc_signal<sc_uint<32> >  w_DATA_IN_REG_FILE;
+    sc_signal<sc_uint<32> > w_DATA_WRITE_BACK;
+    sc_signal<sc_uint<32> > w_DATA_IN_REG_FILE;
     sc_signal<sc_uint<5> >  w_REG_SELECTED;
-    sc_signal<sc_uint<32> >  w_DATA_OUT_A_REG_FILE;
-    sc_signal<sc_uint<32> >  w_DATA_OUT_B_REG_FILE;
+    sc_signal<sc_uint<5> >  w_WR_ADDRESS_REG_FILE;
+    sc_signal<sc_uint<32> > w_DATA_OUT_A_REG_FILE;
+    sc_signal<sc_uint<32> > w_DATA_OUT_B_REG_FILE;
+    sc_signal<sc_uint<5> >  w_ADDRESS_REGISTER_RA;
     // ALU
-    sc_signal<sc_uint<32> >  w_ALU_SIGN_EXTENDED;
-    sc_signal<sc_uint<32> >  w_ALU_B_INPUT;
-    sc_signal<sc_uint<32> >  w_ALU_OUT;
-    sc_signal<bool>          w_ALU_ZERO;
+    sc_signal<sc_uint<32> > w_ALU_SIGN_EXTENDED;
+    sc_signal<sc_uint<32> > w_ALU_B_INPUT;
+    sc_signal<sc_uint<32> > w_ALU_OUT;
+    sc_signal<bool>         w_ALU_ZERO;
     // Data Memory
-    sc_signal<sc_uint<32> >  w_DATA_MEM_OUT;
+    sc_signal<sc_uint<32> > w_DATA_MEM_OUT;
     // Branch AND
-    sc_signal<bool>          w_BRANCH_RESULT;
+    sc_signal<bool>         w_BRANCH_RESULT;
 
     // Signal tracing
     sc_trace_file *tf;

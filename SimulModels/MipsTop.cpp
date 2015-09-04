@@ -16,6 +16,8 @@ Mips::Mips(sc_module_name mn) : sc_module(mn) {
     std::cout << "Constructor MIPS" << std::endl;
 #endif
 
+    w_ADDRESS_REGISTER_RA.write(31); // $ra
+
     SC_METHOD(p_signExtend);
     dont_initialize();
     sensitive << w_IMED16;
@@ -30,7 +32,7 @@ Mips::Mips(sc_module_name mn) : sc_module(mn) {
     c_InstructionMemory->o_DATA_INSTRUCTION(w_INSTRUCTION);
 
     ///////// Program Counter /////////
-    c_PC = new ProgramCounter("PC",c_InstructionMemory->lastAddress);
+    c_PC = new ProgramCounter("PC",&c_InstructionMemory->lastAddress);
     c_PC->i_CLK(i_CLK);
     c_PC->i_DATA_IN(w_PC_IN);
     c_PC->i_RST(i_RST);
@@ -51,6 +53,7 @@ Mips::Mips(sc_module_name mn) : sc_module(mn) {
     ///////// Control /////////
     c_Control = new Control("Control");
     c_Control->i_DATA_OP(w_OP);
+    c_Control->i_DATA_FUNCTION(w_FUNCTION);
     c_Control->o_DATA_ALU_OP(w_ALU_OP);
     c_Control->o_DATA_ALU_SRC(w_ALU_SRC);
     c_Control->o_DATA_BRANCH(w_BRANCH);
@@ -60,6 +63,8 @@ Mips::Mips(sc_module_name mn) : sc_module(mn) {
     c_Control->o_DATA_MEM_WRITE(w_MEM_WRITE);
     c_Control->o_DATA_REG_DST(w_REG_DST);
     c_Control->o_DATA_REG_WRITE(w_REG_WRITE);
+    c_Control->o_DATA_JAL(w_JAL);
+    c_Control->o_DATA_JR(w_JR);
 
     ///////// Mux Register File Input /////////
     c_MuxInputRegFile = new Mux2x1_5bit("MuxRegisterSelect");
@@ -68,13 +73,27 @@ Mips::Mips(sc_module_name mn) : sc_module(mn) {
     c_MuxInputRegFile->i_SEL(w_REG_DST);
     c_MuxInputRegFile->o_DATA_OUT(w_REG_SELECTED);
 
+    ///////// Mux Register File Jal Write Address Select /////////
+    c_MuxJalAddressRegFile = new Mux2x1_5bit("MuxJalAddress");
+    c_MuxJalAddressRegFile->i_SEL(w_JAL);
+    c_MuxJalAddressRegFile->i_DATA_A(w_REG_SELECTED);
+    c_MuxJalAddressRegFile->i_DATA_B(w_ADDRESS_REGISTER_RA);
+    c_MuxJalAddressRegFile->o_DATA_OUT(w_WR_ADDRESS_REG_FILE);
+
+    ///////// Mux Register File Jal DATA IN Select /////////
+    c_MuxJalDataRegFile = new Mux2x1_32bit("MuxJalData");
+    c_MuxJalDataRegFile->i_SEL(w_JAL);
+    c_MuxJalDataRegFile->i_DATA_A(w_DATA_WRITE_BACK);
+    c_MuxJalDataRegFile->i_DATA_B( w_PC_PLUS4 );
+    c_MuxJalDataRegFile->o_DATA_OUT(w_DATA_IN_REG_FILE);
+
     ///////// Register File /////////
     c_RegFile = new RegisterFile("RegisterFile");
     c_RegFile->i_CLK(i_CLK);
     c_RegFile->i_DATA_IN(w_DATA_IN_REG_FILE);
     c_RegFile->i_RD_ADDRESS_0(w_RS);
     c_RegFile->i_RD_ADDRESS_1(w_RT);
-    c_RegFile->i_WR_ADDRESS(w_REG_SELECTED);
+    c_RegFile->i_WR_ADDRESS(w_WR_ADDRESS_REG_FILE);
     c_RegFile->i_WR_ENABLE(w_REG_WRITE);
     c_RegFile->o_DATA_OUT_0(w_DATA_OUT_A_REG_FILE);
     c_RegFile->o_DATA_OUT_1(w_DATA_OUT_B_REG_FILE);
@@ -112,15 +131,18 @@ Mips::Mips(sc_module_name mn) : sc_module(mn) {
     c_MuxWriteBack->i_SEL(w_MEM_TO_REG);
     c_MuxWriteBack->i_DATA_A(w_ALU_OUT);
     c_MuxWriteBack->i_DATA_B(w_DATA_MEM_OUT);
-    c_MuxWriteBack->o_DATA_OUT(w_DATA_IN_REG_FILE);
+    c_MuxWriteBack->o_DATA_OUT(w_DATA_WRITE_BACK);
 
 
     ///////// PC_Control /////////
     c_PC_Control = new PC_Control("PC_Update");
-    c_PC_Control->i_DVC(w_BRANCH_RESULT);
     c_PC_Control->i_DVI(w_JUMP);
+    c_PC_Control->i_DVC(w_BRANCH_RESULT);
     c_PC_Control->i_IMED26(w_IMED26);
     c_PC_Control->i_PC(w_PC_OUT);
+    c_PC_Control->i_JR(w_JR);
+    c_PC_Control->i_DATA(w_DATA_OUT_A_REG_FILE);
+    c_PC_Control->o_PC_PLUS4(w_PC_PLUS4);
     c_PC_Control->o_NEXT_PC(w_PC_IN);
 
     // Signal tracing
@@ -130,7 +152,6 @@ Mips::Mips(sc_module_name mn) : sc_module(mn) {
     sc_trace(tf,w_PC_IN,"NEXT_PC");
     sc_trace(tf,w_PC_OUT,"PC_OUT" );
     sc_trace(tf,w_INSTRUCTION,"INSTRUCTION");
-    sc_trace(tf,w_FUNCTION,"FUNCTION");
     sc_trace(tf,w_IMED16,"IMED16");
     sc_trace(tf,w_IMED26,"IMED26");
     sc_trace(tf,w_OP,"OP");
@@ -138,6 +159,7 @@ Mips::Mips(sc_module_name mn) : sc_module(mn) {
     sc_trace(tf,w_RS,"RS");
     sc_trace(tf,w_RT,"RT");
     sc_trace(tf,w_SHAMT,"SHAMT");
+    sc_trace(tf,w_FUNCTION,"FUNCTION");
     sc_trace(tf,w_DATA_OUT_A_REG_FILE,"DATA_A_REG_FILE");
     sc_trace(tf,w_DATA_OUT_B_REG_FILE,"DATA_B_REG_FILE");
     sc_trace(tf,w_ALU_OP,"ALU_OP");
@@ -153,10 +175,13 @@ Mips::Mips(sc_module_name mn) : sc_module(mn) {
     sc_trace(tf,w_MEM_WRITE,"MEM_WRITE");
     sc_trace(tf,w_REG_DST,"REG_DST");
     sc_trace(tf,w_REG_WRITE,"REG_WRITE");
+    sc_trace(tf,w_JAL,"JAL");
+    sc_trace(tf,w_JR,"JR");
     sc_trace(tf,w_DATA_IN_REG_FILE,"DATA_IN_REG_FILE");
-    sc_trace(tf,w_REG_SELECTED,"ADDR_WR_REG_FILE");
-    sc_trace(tf,w_RS,"ADDR_RD_1_REG_FILE");
-    sc_trace(tf,w_RT,"ADDR_RD_2_REG_FILE");
+    sc_trace(tf,w_WR_ADDRESS_REG_FILE,"ADDR_WR_REG_FILE");
+    sc_trace(tf,w_REG_SELECTED,"WR_REG_SELECTED");
+    sc_trace(tf,w_RS,"ADDR_RD_1_REG_FILE[RS]");
+    sc_trace(tf,w_RT,"ADDR_RD_2_REG_FILE[RT]");
     sc_trace(tf,w_DATA_OUT_A_REG_FILE,"ALU_IN_A");
     sc_trace(tf,w_ALU_B_INPUT,"ALU_IN_B");
 
@@ -217,4 +242,6 @@ Mips::~Mips() {
     delete c_MuxInputRegFile;
     delete c_MuxInputAluB;
     delete c_MuxWriteBack;
+    delete c_MuxJalAddressRegFile;
+    delete c_MuxJalDataRegFile;
 }

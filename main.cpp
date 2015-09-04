@@ -27,31 +27,25 @@ int sc_main(int , char**) {
     mips->i_CLK(w_CLK);
     mips->i_RST(w_RST);
 
-    sc_start();
-    mips->c_RegFile->debug();
-
-    // TODO Instruções para serem verificadas e talvez implementadas
-    /*
-     * jal
-     *
-     * R-format
-     * jr
-     **/
-//    std::cout << "\nInicio!" << std::endl;
-//    sc_start(SC_ZERO_TIME);
-//    sc_start(clockTime/2,SC_NS);
+//    sc_start();
 //    mips->c_RegFile->debug();
 
-//    int numPassos = 10;
-//    for( int i = 1; i <= numPassos; i++  ) {
-//        std::cout << "\n\nCiclo " << i << "!" << std::endl;
-//        sc_start(clockTime,SC_NS);
-//        mips->c_RegFile->debug();
-//    }
+    std::cout << "\nInicio!" << std::endl;
+    sc_start(SC_ZERO_TIME);
+    sc_start(clockTime/2,SC_NS);
+    mips->c_RegFile->debug();
+
+    int numPassos = 11;
+    for( int i = 1; i <= numPassos; i++  ) {
+        std::cout << "\n\nCiclo " << i << "!" << std::endl;
+        sc_start(clockTime,SC_NS);
+        mips->c_RegFile->debug();
+    }
 
     delete tb;
     delete mips;
 
+    std::cout << std::endl;
     return 0;
 }
 

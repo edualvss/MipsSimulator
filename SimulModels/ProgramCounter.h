@@ -24,7 +24,7 @@ using namespace sc_dt;
 
 class ProgramCounter : public sc_module {
 private:
-    unsigned int lastAddress;
+    unsigned int* lastAddress;
 public:
     // Interface
     sc_in<bool>          i_CLK;         // Clock
@@ -38,7 +38,7 @@ public:
     bool simulationEnded;
 
     SC_HAS_PROCESS(ProgramCounter);
-    ProgramCounter(sc_module_name,unsigned int lastAddress);
+    ProgramCounter(sc_module_name,unsigned int* lastAddress);
 
 };
 

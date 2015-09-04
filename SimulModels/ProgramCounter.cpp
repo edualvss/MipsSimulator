@@ -8,7 +8,7 @@ FILE   : ProgramCounter.cpp
 
 #include "ProgramCounter.h"
 
-ProgramCounter::ProgramCounter(sc_module_name mn, unsigned int lastAddress) : sc_module(mn) {
+ProgramCounter::ProgramCounter(sc_module_name mn, unsigned int *lastAddress) : sc_module(mn) {
 #ifdef DEBUG_METHODS
     std::cout << "Constructor ProgramCounter" << std::endl;
 #endif
@@ -33,7 +33,7 @@ void ProgramCounter::p_PC() {
     sc_uint<32> v_DATA_IN;
     v_DATA_IN = i_DATA_IN.read();
 
-    if( v_DATA_IN > lastAddress ) { // After last instruction
+    if( v_DATA_IN > *lastAddress ) { // After last instruction
         sc_stop();                  // End simulation
         simulationEnded = true;
     }
@@ -41,7 +41,7 @@ void ProgramCounter::p_PC() {
     if( i_RST ) {
         o_DATA_OUT.write(INITIAL_PC_ADDRESS);
     } else {
-        o_DATA_OUT.write(i_DATA_IN.read());
+        o_DATA_OUT.write(v_DATA_IN);
     }
 
 }

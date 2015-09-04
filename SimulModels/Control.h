@@ -25,6 +25,7 @@ public:
 
     // Interface
     sc_in<sc_uint<6> >  i_DATA_OP;          // Input data channel[5:0]
+    sc_in<sc_uint<6> >  i_DATA_FUNCTION;    // Input data function to decode JR
     sc_out<sc_uint<2> > o_DATA_ALU_OP;      // Output data channel ALUOp[1:0]
     sc_out<bool>        o_DATA_REG_DST;     // Output data channel RegDst
     sc_out<bool>        o_DATA_ALU_SRC;     // Output data channel ALUSrc
@@ -34,6 +35,8 @@ public:
     sc_out<bool>        o_DATA_MEM_WRITE;   // Output data channel MemWrite
     sc_out<bool>        o_DATA_BRANCH;      // Output data channel Branch
     sc_out<bool>        o_DATA_DVI;         // Output data channel DVI
+    sc_out<bool>        o_DATA_JAL;         // Output data channel JAL
+    sc_out<bool>        o_DATA_JR;          // Output data channel JR
 
     // There is no internal data structures
 

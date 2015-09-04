@@ -12,9 +12,12 @@ public:
     // Interface
     sc_in<bool>          i_DVI;     // Input Inconditional Jump
     sc_in<bool>          i_DVC;     // Input Conditional Jump
-    sc_in<sc_uint<32> >  i_PC;      // PC
+    sc_in<bool>          i_JR;      // Input Jump Register
+    sc_in<sc_uint<32> >  i_PC;      // Input data PC
     sc_in<sc_uint<26> >  i_IMED26;  // Instruction [25..0]
+    sc_in<sc_uint<32> >  i_DATA;    // Input binded with output A from Register File to jump register
     sc_out<sc_uint<32> > o_NEXT_PC; // Output
+    sc_out<sc_uint<32> > o_PC_PLUS4;// PC + 4
 
     // Module's process
     void p_update();
