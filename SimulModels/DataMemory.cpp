@@ -124,7 +124,7 @@ void DataMemory::debug() {
     for( it = m_DATA.begin(); it != m_DATA.end(); it++ ) {
         unsigned int address = (*it).first;
         sc_uint<32> data =  (*it).second;
-        int d = data.to_int();
-        printf("\nAddress[%#.8x]: %#.8x",address,d);
+        unsigned int d = data.to_uint();
+        printf("\nAddress[%#.8x]: %u",address,d);
     }
 }

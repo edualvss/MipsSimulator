@@ -21,15 +21,15 @@ int sc_main(int , char**) {
     tb->o_RST(w_RST);
 
     Mips* mips = new Mips("MipsMono");
-    mips->c_InstructionMemory->initialize("tests/InsProc.txt");
-    mips->c_InstructionMemory->debug();
-//    mips->c_DataMemory->initialize("");
+    mips->c_InstructionMemory->initialize("tests/InsBubbleSort.txt");
+    mips->c_DataMemory->initialize("tests/DataBubbleSort.txt");
+    mips->c_DataMemory->debug();
     mips->i_CLK(w_CLK);
     mips->i_RST(w_RST);
 
-//    sc_start();
-//    mips->c_RegFile->debug();
-
+    sc_start();
+    mips->c_RegFile->debug();
+/*
     std::cout << "\nInicio!" << std::endl;
     sc_start(SC_ZERO_TIME);
     sc_start(clockTime/2,SC_NS);
@@ -41,6 +41,8 @@ int sc_main(int , char**) {
         sc_start(clockTime,SC_NS);
         mips->c_RegFile->debug();
     }
+*/
+    mips->c_DataMemory->debug();
 
     delete tb;
     delete mips;

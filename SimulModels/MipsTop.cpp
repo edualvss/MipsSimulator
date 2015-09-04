@@ -180,8 +180,8 @@ Mips::Mips(sc_module_name mn) : sc_module(mn) {
     sc_trace(tf,w_DATA_IN_REG_FILE,"DATA_IN_REG_FILE");
     sc_trace(tf,w_WR_ADDRESS_REG_FILE,"ADDR_WR_REG_FILE");
     sc_trace(tf,w_REG_SELECTED,"WR_REG_SELECTED");
-    sc_trace(tf,w_RS,"ADDR_RD_1_REG_FILE[RS]");
-    sc_trace(tf,w_RT,"ADDR_RD_2_REG_FILE[RT]");
+    sc_trace(tf,w_RS,"ADDR_RD_1_REG_FILE(RS)");
+    sc_trace(tf,w_RT,"ADDR_RD_2_REG_FILE(RT)");
     sc_trace(tf,w_DATA_OUT_A_REG_FILE,"ALU_IN_A");
     sc_trace(tf,w_ALU_B_INPUT,"ALU_IN_B");
 
