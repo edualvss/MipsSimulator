@@ -4,6 +4,7 @@
 #include "SimulModels/Decoder.h"
 #include "SimulModels/Instruction.h"
 #include "SimulModels/RegisterFile.h"
+#include "SimulModels/InstructionMemory.h"
 #include "SimulModels/DataMemory.h"
 
 int sc_main(int , char**) {
@@ -19,14 +20,15 @@ int sc_main(int , char**) {
     tb->i_CLK(w_CLK);
     tb->o_RST(w_RST);
 
-    Mips* mips = new Mips("MipsMono","tests/InsSumMat.txt","tests/DataSumMat.txt");
+    Mips* mips = new Mips("MipsMono");
+    mips->c_InstructionMemory->initialize("tests/InsProc.txt");
+    mips->c_InstructionMemory->debug();
+//    mips->c_DataMemory->initialize("");
     mips->i_CLK(w_CLK);
     mips->i_RST(w_RST);
 
     sc_start();
     mips->c_RegFile->debug();
-    mips->c_DataMemory->debug();
-
 
     // TODO Instruções para serem verificadas e talvez implementadas
     /*

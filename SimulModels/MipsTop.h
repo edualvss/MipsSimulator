@@ -98,7 +98,7 @@ public:
     void p_branch();
 
     SC_HAS_PROCESS(Mips);
-    Mips(sc_module_name moduleName, const char* instructionMemory, const char* dataMemory);
+    Mips(sc_module_name moduleName);
     virtual ~Mips();
 
 };

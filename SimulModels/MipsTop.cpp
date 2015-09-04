@@ -11,7 +11,7 @@
 #include "ProgramCounter.h"
 #include "RegisterFile.h"
 
-Mips::Mips(sc_module_name mn, const char* instructionMem,const char* dataMem) : sc_module(mn) {
+Mips::Mips(sc_module_name mn) : sc_module(mn) {
 #ifdef DEBUG_METHODS
     std::cout << "Constructor MIPS" << std::endl;
 #endif
@@ -26,7 +26,6 @@ Mips::Mips(sc_module_name mn, const char* instructionMem,const char* dataMem) : 
 
     ///////// Instruction Memory /////////
     c_InstructionMemory = new InstructionMemory("InstructionMemory");
-    c_InstructionMemory->initialize(instructionMem);
     c_InstructionMemory->i_DATA_ADDRESS(w_PC_OUT);
     c_InstructionMemory->o_DATA_INSTRUCTION(w_INSTRUCTION);
 
@@ -100,7 +99,6 @@ Mips::Mips(sc_module_name mn, const char* instructionMem,const char* dataMem) : 
 
     ///////// Data Memory /////////
     c_DataMemory = new DataMemory("DataMemory");
-    c_DataMemory->initialize(dataMem);
     c_DataMemory->debug();
     c_DataMemory->i_CLK(i_CLK);
     c_DataMemory->i_ADDRESS(w_ALU_OUT);
