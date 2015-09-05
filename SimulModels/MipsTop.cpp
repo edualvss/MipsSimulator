@@ -16,7 +16,12 @@ Mips::Mips(sc_module_name mn) : sc_module(mn) {
     std::cout << "Constructor MIPS" << std::endl;
 #endif
 
+    clockCount = 0;
     w_ADDRESS_REGISTER_RA.write(31); // $ra
+
+    SC_METHOD(p_updateClockCount);
+    dont_initialize();
+    sensitive << i_CLK.pos();
 
     SC_METHOD(p_signExtend);
     dont_initialize();
@@ -148,6 +153,7 @@ Mips::Mips(sc_module_name mn) : sc_module(mn) {
     // Signal tracing
     sc_trace_file *tf = sc_create_vcd_trace_file("waves");
     sc_trace(tf,i_CLK,"CLK");
+    sc_trace(tf,clockCount,"CLK_Count");
     sc_trace(tf,i_RST,"RST");
     sc_trace(tf,w_PC_IN,"NEXT_PC");
     sc_trace(tf,w_PC_OUT,"PC_OUT" );
@@ -187,14 +193,24 @@ Mips::Mips(sc_module_name mn) : sc_module(mn) {
 
 }
 
+void Mips::p_updateClockCount() {
+#ifdef DEBUG_METHODS
+    std::cout << "Mips::p_updateClockCount" << std::endl;
+#endif
+    clockCount++;
+}
+
 void Mips::p_signExtend() {
 #ifdef DEBUG_METHODS
     std::cout << "Mips::p_signExtend" << std::endl;
 #endif
 
-    sc_uint<32> v_SIGN_EXTENDED;
+    sc_uint<32> v_SIGN_EXTENDED = 0;
     v_SIGN_EXTENDED.range(15,0) = w_IMED16.read();
-    v_SIGN_EXTENDED(31,16) = v_SIGN_EXTENDED[15];
+
+    if( v_SIGN_EXTENDED[5] == 1 ) {
+        v_SIGN_EXTENDED(31,16) = 0xFFFF;
+    }
 
     sc_uint<6> v_OP;
     v_OP = w_OP.read();

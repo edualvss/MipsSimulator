@@ -100,10 +100,12 @@ public:
 
     // Signal tracing
     sc_trace_file *tf;
+    unsigned long long clockCount;
 
     // Module's processes
     void p_signExtend();
     void p_branch();
+    void p_updateClockCount();
 
     SC_HAS_PROCESS(Mips);
     Mips(sc_module_name moduleName);
