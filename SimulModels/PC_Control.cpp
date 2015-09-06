@@ -26,12 +26,16 @@ void PC_Control::p_update() {
     } else {
         if( i_DVI.read() == 1 ) { // Unconditional
             v_OUT.range(31,28) = v_PC_PLUS4(31,28);
-            v_OUT.range(27,0) = v_IMED26 << 2; // Shift left 2 positions
+            sc_uint<28> v_SHIFT;
+            v_SHIFT = v_IMED26 << 2;// Shift left 2 positions
+            v_OUT.range(27,0) = v_SHIFT;
         } else {
             if( i_DVC.read() == 1 ) { // Conditional
                 sc_uint<32> v_SIGNAL_EXTENDED;
                 v_SIGNAL_EXTENDED.range(15,0) = v_IMED26(15,0);
-                v_SIGNAL_EXTENDED(31,16) = v_IMED26[15];
+                if( v_IMED26[15] == 1 ) {
+                    v_SIGNAL_EXTENDED(31,16) = 0xFFFF;
+                }
                 v_SIGNAL_EXTENDED = v_SIGNAL_EXTENDED << 2;
                 v_OUT = v_SIGNAL_EXTENDED + v_PC_PLUS4;
             } else {

@@ -22,26 +22,28 @@ int sc_main(int , char**) {
 
     Mips* mips = new Mips("MipsMono");
     mips->c_InstructionMemory->initialize("tests/InsBubbleSort.txt");
-    mips->c_DataMemory->initialize("tests/DataMinimal.txt");
+    mips->c_DataMemory->initialize("tests/DataBubbleSort.txt");
     mips->c_DataMemory->debug();
     mips->i_CLK(w_CLK);
     mips->i_RST(w_RST);
 
-//    sc_start();
-//    mips->c_RegFile->debug();
-
+    sc_start();
+    mips->c_RegFile->debug();
+/*
     std::cout << "\nInicio!" << std::endl;
     sc_start(SC_ZERO_TIME);
     sc_start(clockTime/2,SC_NS);
     mips->c_RegFile->debug();
 
-    int numPassos = 56;
+    int numPassos = 60;
     for( int i = 1; i <= numPassos; i++  ) {
         std::cout << "\n\nCiclo " << i << "!" << std::endl;
         sc_start(clockTime,SC_NS);
         mips->c_RegFile->debug();
-    }
+        // Antes, 1, 2ª escrita: ciclos 30,31,32
 
+    }
+*/
     mips->c_DataMemory->debug();
 
     delete tb;
