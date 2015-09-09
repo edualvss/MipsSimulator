@@ -19,7 +19,7 @@ DataMemory::DataMemory(sc_module_name mn) : sc_module(mn) {
 
     SC_METHOD(p_read);
     dont_initialize();
-    sensitive <<i_ADDRESS << i_RD_ENABLE;
+    sensitive << i_ADDRESS << i_RD_ENABLE;
 
 }
 

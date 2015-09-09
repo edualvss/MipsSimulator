@@ -7,6 +7,8 @@
 #include "SimulModels/InstructionMemory.h"
 #include "SimulModels/DataMemory.h"
 
+#include <time.h>
+
 int sc_main(int , char**) {
 #ifdef DEBUG_METHODS
     cout << "Main" << std::endl;
@@ -27,7 +29,10 @@ int sc_main(int , char**) {
     mips->i_CLK(w_CLK);
     mips->i_RST(w_RST);
 
+    clock_t t0 = clock();
     sc_start();
+    clock_t t1 = clock();
+
     mips->c_RegFile->debug();
 /*
     std::cout << "\nInicio!" << std::endl;
@@ -45,6 +50,8 @@ int sc_main(int , char**) {
     }
 */
     mips->c_DataMemory->debug();
+
+    std::cout << "\nTinicial: "<<t0<<", Tfinal: "<<t1<<", Tduracao: " << (t1-t0) << std::endl;
 
     delete tb;
     delete mips;
