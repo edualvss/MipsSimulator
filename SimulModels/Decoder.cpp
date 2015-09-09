@@ -126,6 +126,11 @@ Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
     ins->setAddressingMode(Instruction::Immediate);
     ins->setAddressingModeName(Instruction::ADDRESSING_MODE_NAME[Instruction::Immediate]);
 
+    if( instruction == 0 ) {
+        ins->setInstructionMnemonic("nop");
+        return ins;
+    }
+
     switch(op) { // Decode general instructions
         case 0b000000: { // R-format
             ins->setFormat( Instruction::R );
@@ -175,6 +180,10 @@ Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
                 }
                 case 0b100111: { // nor
                     ins->setInstructionMnemonic("nor");
+                    break;
+                }
+                case 0b101010: {
+                    ins->setInstructionMnemonic("slt");
                     break;
                 }
                 default: { // R-format instructions not implemented

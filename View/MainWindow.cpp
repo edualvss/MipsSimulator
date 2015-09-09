@@ -140,7 +140,9 @@ void MainWindow::loadInstructionMemory(InstructionMemory *im) {
     std::vector<sc_uint<32> > vec = im->getInstructions();
 
     clearTable( ui->tableInstructionMemory );
-    ui->tableInstructionMemory->clear();
+    ui->tableInstructionMemory->clearContents();
+
+    ui->tableInstructionMemory->setRowCount( vec.size() );
 
     for(unsigned int i = 0; i < vec.size(); i++ ) {
         unsigned int address = i*4 + INITIAL_PC_ADDRESS;

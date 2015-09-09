@@ -42,6 +42,10 @@ std::string Instruction::getFormatedInstruction() {
 
     ss << "0x" << std::uppercase << std::hex;
 
+    if( insMnemonic.compare("nop") == 0) {
+        return insMnemonic;
+    }
+
     switch( this->format ) {
         case R:
             str = insMnemonic + "\t" + rdRegName + ", " + rsRegName + ", " + rtRegName;
