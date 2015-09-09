@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/Latest_Article.png</file>
+        <file>icons/binary-code.png</file>
+        <file>icons/hexsudoku.png</file>
+        <file>icons/next.png</file>
+        <file>icons/playall.png</file>
+        <file>icons/previous.png</file>
+    </qresource>
+</RCC>

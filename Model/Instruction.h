@@ -81,6 +81,8 @@ public:
     inline void setImed26             (unsigned int      imed26    ) {  _imed26           = imed26   ; }
     inline void setInstruction        (unsigned int      ins       ) { instruction        = ins      ; }
 
+    std::string getFormatedInstruction();
+
     void debug();
 
 private:

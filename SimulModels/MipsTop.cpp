@@ -4,7 +4,6 @@
 #include "Control.h"
 #include "DataMemory.h"
 #include "Decoder.h"
-#include "Instruction.h"
 #include "InstructionMemory.h"
 #include "Mux2x1.h"
 #include "PC_Control.h"
@@ -123,7 +122,6 @@ Mips::Mips(sc_module_name mn) : sc_module(mn) {
 
     ///////// Data Memory /////////
     c_DataMemory = new DataMemory("DataMemory");
-    c_DataMemory->debug();
     c_DataMemory->i_CLK(i_CLK);
     c_DataMemory->i_ADDRESS(w_ALU_OUT);
     c_DataMemory->i_DATA_IN(w_DATA_OUT_B_REG_FILE);

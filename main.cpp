@@ -1,19 +1,24 @@
-#include "SimulModels/Testbench.h"
-#include "SimulModels/MipsTop.h"
+#include <QApplication>
+#include "Control/AppControl.h"
+#include "View/MainWindow.h"
 
-#include "SimulModels/Decoder.h"
-#include "SimulModels/Instruction.h"
-#include "SimulModels/RegisterFile.h"
-#include "SimulModels/InstructionMemory.h"
-#include "SimulModels/DataMemory.h"
 
-#include <time.h>
-
-int sc_main(int , char**) {
 #ifdef DEBUG_METHODS
-    cout << "Main" << std::endl;
+    #include <iostream>
 #endif
 
+int main(int argc, char* argv[]) {
+#ifdef DEBUG_METHODS
+    std::cout << "Main" << std::endl;
+#endif
+
+    QApplication app(argc,argv);
+    MainWindow mw;
+    AppControl appCtrl(&mw);
+    appCtrl.startApp();
+    return app.exec();
+
+/*
     int              clockTime = 10;
     sc_clock         w_CLK("CLK",clockTime,SC_NS);      // System clock with 10 ns period
     sc_signal<bool>  w_RST;
@@ -34,7 +39,7 @@ int sc_main(int , char**) {
     clock_t t1 = clock();
 
     mips->c_RegFile->debug();
-/*
+
     std::cout << "\nInicio!" << std::endl;
     sc_start(SC_ZERO_TIME);
     sc_start(clockTime/2,SC_NS);
@@ -48,15 +53,13 @@ int sc_main(int , char**) {
         // Antes, 1, 2ª escrita: ciclos 30,31,32
 
     }
-*/
+
     mips->c_DataMemory->debug();
 
     std::cout << "\nTinicial: "<<t0<<", Tfinal: "<<t1<<", Tduracao: " << (t1-t0) << std::endl;
 
     delete tb;
     delete mips;
-
-    std::cout << std::endl;
-    return 0;
+*/
 }
 

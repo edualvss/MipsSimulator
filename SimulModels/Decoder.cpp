@@ -8,7 +8,7 @@ FILE   : Decoder.cpp
 #include "Decoder.h"
 #include "RegisterFile.h"
 
-#include "Instruction.h"
+#include "Model/Instruction.h"
 
 Decoder::Decoder(sc_module_name mn) : sc_module(mn) {
 #ifdef DEBUG_METHODS

@@ -1,7 +1,5 @@
+QT = core gui widgets
 TEMPLATE = app
-CONFIG += console
-CONFIG -= app_bundle
-CONFIG -= qt
 
 HEADERS += \
     SimulModels/ProgramCounter.h \
@@ -10,12 +8,14 @@ HEADERS += \
     SimulModels/Control.h \
     SimulModels/DataMemory.h \
     SimulModels/Decoder.h \
-    SimulModels/Instruction.h \
     SimulModels/Mux2x1.h \
     SimulModels/Alu.h \
     SimulModels/PC_Control.h \
     SimulModels/MipsTop.h \
-    SimulModels/Testbench.h
+    SimulModels/Testbench.h \
+    View/MainWindow.h \
+    Control/AppControl.h \
+    Model/Instruction.h
 
 SOURCES += main.cpp \
     SimulModels/ProgramCounter.cpp \
@@ -24,11 +24,13 @@ SOURCES += main.cpp \
     SimulModels/Control.cpp \
     SimulModels/DataMemory.cpp \
     SimulModels/Decoder.cpp \
-    SimulModels/Instruction.cpp \
     SimulModels/Mux2x1.cpp \
     SimulModels/Alu.cpp \
     SimulModels/PC_Control.cpp \
-    SimulModels/MipsTop.cpp
+    SimulModels/MipsTop.cpp \
+    View/MainWindow.cpp \
+    Control/AppControl.cpp \
+    Model/Instruction.cpp
 
 CONFIG -= debug_and_release
 
@@ -75,3 +77,9 @@ debug {
     CONFIG  += warn_on
     DEFINES += DEBUG_METHODS
 }
+
+FORMS += \
+    View/MainWindow.ui
+
+RESOURCES += \
+    View/media.qrc
