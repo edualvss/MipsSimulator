@@ -17,8 +17,6 @@ private:
     Testbench* tester;
     int clockTime;
 
-    bool initialized;
-
     void initSimulator();
     void endSimulator();
 
@@ -32,6 +30,7 @@ signals:
 private slots:
     void receiveInstructionFile(QString);
     void receiveDataFile(QString);
+    void simulate();
 };
 
 #endif // CONTROL_H

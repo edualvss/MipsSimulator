@@ -15,7 +15,9 @@ HEADERS += \
     SimulModels/Testbench.h \
     View/MainWindow.h \
     Control/AppControl.h \
-    Model/Instruction.h
+    Model/Instruction.h \
+    Model/CycleStatus.h \
+    SimulModels/SystemMonitor.h
 
 SOURCES += main.cpp \
     SimulModels/ProgramCounter.cpp \
@@ -30,7 +32,9 @@ SOURCES += main.cpp \
     SimulModels/MipsTop.cpp \
     View/MainWindow.cpp \
     Control/AppControl.cpp \
-    Model/Instruction.cpp
+    Model/Instruction.cpp \
+    Model/CycleStatus.cpp \
+    SimulModels/SystemMonitor.cpp
 
 CONFIG -= debug_and_release
 

@@ -4,7 +4,7 @@
         <file>icons/binary-code.png</file>
         <file>icons/hexsudoku.png</file>
         <file>icons/next.png</file>
-        <file>icons/playall.png</file>
         <file>icons/previous.png</file>
+        <file>icons/simulate.png</file>
     </qresource>
 </RCC>

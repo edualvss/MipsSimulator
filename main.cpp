@@ -2,7 +2,6 @@
 #include "Control/AppControl.h"
 #include "View/MainWindow.h"
 
-
 #ifdef DEBUG_METHODS
     #include <iostream>
 #endif

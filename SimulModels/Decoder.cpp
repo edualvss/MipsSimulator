@@ -85,7 +85,7 @@ Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
      *   001100  | syscall     | % Issue a system call (not implemented)
      *   001101  | break       | % Break execution Terminate program execution with exception (not implemented)
      *   100000  | add         | Addition with overflow
-     *   100011  | sub         | Subtraction with overflow
+     *   100010  | sub         | Subtraction with overflow
      *   100100  | and         | Bitwise AND
      *   100101  | or          | Bitwise OR
      *   100110  | xor         | Bitwise XOR
@@ -162,7 +162,7 @@ Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
                     ins->setInstructionMnemonic("add");
                     break;
                 }
-                case 0b100011: { // sub
+                case 0b100010: { // sub
                     ins->setInstructionMnemonic("sub");
                     break;
                 }

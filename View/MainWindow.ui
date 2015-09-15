@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>978</width>
-    <height>662</height>
+    <width>1057</width>
+    <height>661</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,6 +30,9 @@
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
         <widget class="QTableWidget" name="tableInstructionMemory">
+         <attribute name="horizontalHeaderStretchLastSection">
+          <bool>true</bool>
+         </attribute>
          <column>
           <property name="text">
            <string>Address</string>
@@ -804,7 +807,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>978</width>
+     <width>1057</width>
      <height>26</height>
     </rect>
    </property>
@@ -821,7 +824,7 @@
     <property name="title">
      <string>Simulation Control</string>
     </property>
-    <addaction name="actionExecute_All"/>
+    <addaction name="actionSimulate"/>
     <addaction name="actionNext_step"/>
     <addaction name="actionPrevious_Step"/>
    </widget>
@@ -852,7 +855,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionExecute_All"/>
+   <addaction name="actionSimulate"/>
    <addaction name="actionPrevious_Step"/>
    <addaction name="actionNext_step"/>
   </widget>
@@ -885,16 +888,19 @@
     <string>Exit</string>
    </property>
   </action>
-  <action name="actionExecute_All">
+  <action name="actionSimulate">
    <property name="icon">
     <iconset resource="media.qrc">
-     <normaloff>:/icons/playall.png</normaloff>:/icons/playall.png</iconset>
+     <normaloff>:/icons/simulate.png</normaloff>:/icons/simulate.png</iconset>
    </property>
    <property name="text">
-    <string>Execute All</string>
+    <string>Simulate</string>
+   </property>
+   <property name="toolTip">
+    <string>Simulate</string>
    </property>
    <property name="statusTip">
-    <string>Execute All Instructions</string>
+    <string>Simulate the system in SystemC</string>
    </property>
   </action>
   <action name="actionNext_step">

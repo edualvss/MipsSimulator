@@ -9,6 +9,7 @@
 #include "PC_Control.h"
 #include "ProgramCounter.h"
 #include "RegisterFile.h"
+#include "SystemMonitor.h"
 
 Mips::Mips(sc_module_name mn) : sc_module(mn) {
 #ifdef DEBUG_METHODS
@@ -148,6 +149,37 @@ Mips::Mips(sc_module_name mn) : sc_module(mn) {
     c_PC_Control->o_PC_PLUS4(w_PC_PLUS4);
     c_PC_Control->o_NEXT_PC(w_PC_IN);
 
+    ///////////////// Monitor //////////////////
+    /// Save the system status in each cycle ///
+    /// ////////////////////////////////////////
+    c_systemMonitor = new SystemMonitor("Monitor",c_RegFile,c_DataMemory,&clockCount);
+    c_systemMonitor->i_CLK(i_CLK);
+    c_systemMonitor->i_ALU_SRC(w_ALU_SRC);
+    c_systemMonitor->i_BRANCH(w_BRANCH_RESULT);
+    c_systemMonitor->i_CURRENT_PC(w_PC_OUT);
+    c_systemMonitor->i_DVC(w_BRANCH);
+    c_systemMonitor->i_DVI(w_JUMP);
+    c_systemMonitor->i_INSTRUCTION(w_INSTRUCTION);
+    c_systemMonitor->i_JAL(w_JAL);
+    c_systemMonitor->i_JR(w_JR);
+    c_systemMonitor->i_MEM_RD(w_MEM_READ);
+    c_systemMonitor->i_MEM_TO_REG(w_MEM_TO_REG);
+    c_systemMonitor->i_MEM_WR(w_MEM_WRITE);
+    c_systemMonitor->i_NEXT_PC(w_PC_IN);
+    c_systemMonitor->i_REG_DST(w_REG_DST);
+    c_systemMonitor->i_REG_WRITE(w_REG_WRITE);
+    c_systemMonitor->i_rf_DATA_IN(w_DATA_IN_REG_FILE);
+    c_systemMonitor->i_rf_DATA_OUT_0(w_DATA_OUT_A_REG_FILE);
+    c_systemMonitor->i_rf_DATA_OUT_1(w_DATA_OUT_B_REG_FILE);
+    c_systemMonitor->i_rf_RD_ADDRESS_0(w_RS);
+    c_systemMonitor->i_rf_RD_ADDRESS_1(w_RT);
+    c_systemMonitor->i_rf_WR_ADDRESS(w_WR_ADDRESS_REG_FILE);
+    c_systemMonitor->i_ula_IN_0(w_DATA_OUT_A_REG_FILE);
+    c_systemMonitor->i_ula_IN_1(w_ALU_B_INPUT);
+    c_systemMonitor->i_ula_OP(w_ALU_OP);
+    c_systemMonitor->i_ula_OUT(w_ALU_OUT);
+    c_systemMonitor->i_ula_ZERO(w_ALU_ZERO);
+
     // Signal tracing
     sc_trace_file *tf = sc_create_vcd_trace_file("waves");
     sc_trace(tf,i_CLK,"CLK");
@@ -258,4 +290,5 @@ Mips::~Mips() {
     delete c_MuxWriteBack;
     delete c_MuxJalAddressRegFile;
     delete c_MuxJalDataRegFile;
+    delete c_systemMonitor;
 }

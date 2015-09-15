@@ -29,11 +29,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->actionExit->setIcon( this->style()->standardIcon(QStyle::SP_DialogCloseButton) );
     connect(ui->actionExit,SIGNAL(triggered(bool)),this,SLOT(close()));
-
-    ui->actionPrevious_Step->setVisible(false);
-
     connect(ui->actionLoad_Instructions,SIGNAL(triggered(bool)),this,SLOT(openInstructionFile()));
     connect(ui->actionLoad_Data,SIGNAL(triggered(bool)),this,SLOT(openDataFile()));
+    connect(ui->actionSimulate,SIGNAL(triggered(bool)),this,SIGNAL(simulate()));
+
 
 }
 
@@ -53,7 +52,6 @@ void MainWindow::openInstructionFile() {
     QString filename = this->getFile(tr("Select a hexadecimal text instruction file"));
 
     if( filename.isEmpty() || filename.isNull() ) {
-        qDebug() << "Nao";
         return;
     }
 
@@ -67,7 +65,6 @@ void MainWindow::openDataFile() {
 
     QString filename = this->getFile( tr("Select a hexadecimal text data file") );
     if( filename.isEmpty() || filename.isNull() ) {
-        qDebug() << "Nao";
         return;
     }
     emit sendDataFile( filename );
@@ -124,8 +121,8 @@ void MainWindow::loadDataMemory(DataMemory *dm) {
     while( it != map.constEnd() ) {
         unsigned int addr = it.key();
         unsigned int val = it.value();
-        ui->tableDataMemory->setItem( i, 0, new QTableWidgetItem( QString::number(addr,16) ) );
-        ui->tableDataMemory->setItem( i, 1, new QTableWidgetItem( QString::number(val,16) ) );
+        ui->tableDataMemory->setItem( i, 0, new QTableWidgetItem( QString("0x%1").arg(addr,8,16,QLatin1Char('0')) ) );
+        ui->tableDataMemory->setItem( i, 1, new QTableWidgetItem( QString("0x%1").arg(val,8,16,QLatin1Char('0')) ) );
         i++;
         it++;
     }
@@ -146,8 +143,8 @@ void MainWindow::loadInstructionMemory(InstructionMemory *im) {
 
     for(unsigned int i = 0; i < vec.size(); i++ ) {
         unsigned int address = i*4 + INITIAL_PC_ADDRESS;
-        ui->tableInstructionMemory->setItem( i,0, new QTableWidgetItem(QString::number(address,16)) );
-        ui->tableInstructionMemory->setItem( i,1, new QTableWidgetItem(QString::number(vec[i],16)) );
+        ui->tableInstructionMemory->setItem( i,0, new QTableWidgetItem(QString("0x%1").arg(address,8,16,QLatin1Char('0'))) );
+        ui->tableInstructionMemory->setItem( i,1, new QTableWidgetItem( QString("%1").arg(vec[i],8,16,QLatin1Char('0')) ) );
         Instruction* ins = Decoder::getInstructionDecoded(vec[i]);
         ui->tableInstructionMemory->setItem(i,2, new QTableWidgetItem(QString::fromStdString(ins->getFormatedInstruction())));
     }

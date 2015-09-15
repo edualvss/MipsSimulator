@@ -10,6 +10,8 @@
 #include "SimulModels/InstructionMemory.h"
 #include "SimulModels/DataMemory.h"
 
+#include <time.h>
+
 #ifdef DEBUG_METHODS
     #include <iostream>
 #endif
@@ -23,11 +25,11 @@ AppControl::AppControl(QObject *parent) : QObject(parent) {
     this->simulator = NULL;
     this->tester = NULL;
     this->clockTime = 10;
-    this->initialized = false;
     this->mainWindow = static_cast<MainWindow*>(parent);
 
     connect(mainWindow,SIGNAL(sendDataFile(QString)),this,SLOT(receiveDataFile(QString)));
     connect(mainWindow,SIGNAL(sendInstructionFile(QString)),this,SLOT(receiveInstructionFile(QString)));
+    connect(mainWindow,SIGNAL(simulate()),this,SLOT(simulate()));
 }
 
 void AppControl::startApp() {
@@ -39,12 +41,20 @@ void AppControl::startApp() {
 
 }
 
+int sc_main(int , char**) {
+    return 0;
+}
+
 void AppControl::initSimulator() {
 #ifdef DEBUG_METHODS
     std::cout << "AppControl::initSimulator" << std::endl;
 #endif
 
+    sc_core::sc_elab_and_sim(0,0);
+
     this->simulator = new Mips("Mips");
+    this->simulator->c_DataMemory->initialize(dataFile.toStdString().c_str());
+    this->simulator->c_InstructionMemory->initialize(instructionFile.toStdString().c_str());
     sc_clock         w_CLK("CLK",clockTime,SC_NS);      // System clock with 10 ns period
     sc_signal<bool>  w_RST;
 
@@ -56,7 +66,12 @@ void AppControl::initSimulator() {
     mips->i_CLK(w_CLK);
     mips->i_RST(w_RST);
 
-    this->initialized = true;
+    clock_t t0 = clock();
+    sc_start();
+//    endSimulator();
+    clock_t t1 = clock();
+
+    std::cout << "Tempo de simulacao: " << (t1-t0) << std::endl;
 }
 
 void AppControl::endSimulator() {
@@ -68,7 +83,6 @@ void AppControl::endSimulator() {
     delete simulator;
     tester = 0;
     simulator = 0;
-    this->initialized = false;
 
 }
 
@@ -78,13 +92,7 @@ void AppControl::receiveDataFile(QString filename) {
 #endif
 
     this->dataFile = filename;
-    if( ! initialized ) {
-        this->initSimulator();
-    }
 
-    this->simulator->c_DataMemory->initialize(filename.toStdString().c_str());
-
-    this->mainWindow->loadDataMemory( this->simulator->c_DataMemory );
 }
 
 void AppControl::receiveInstructionFile( QString filename ) {
@@ -94,12 +102,12 @@ void AppControl::receiveInstructionFile( QString filename ) {
 
     this->instructionFile = filename;
 
-    if( initialized ) {
-        this->endSimulator();
-    }
-    this->initSimulator();
+}
 
-    this->simulator->c_InstructionMemory->initialize( filename.toStdString().c_str() );
+void AppControl::simulate() {
+#ifdef DEBUG_METHODS
+    std::cout << "AppControl::simulate" << std::endl;
+#endif
+    initSimulator();
 
-    this->mainWindow->loadInstructionMemory( this->simulator->c_InstructionMemory );
 }

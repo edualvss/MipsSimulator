@@ -26,6 +26,7 @@ public:
 signals:
     void sendInstructionFile(QString);
     void sendDataFile(QString);
+    void simulate();
 
 private slots:
     void openInstructionFile();
