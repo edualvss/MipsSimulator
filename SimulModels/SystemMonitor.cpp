@@ -18,6 +18,7 @@ SystemMonitor::SystemMonitor(sc_module_name mn, RegisterFile* rf,
 
 
     SC_METHOD(p_monitoring);
+    dont_initialize();
     sensitive << i_CLK.pos();
 
     this->steps = new std::vector<CycleStatus *>();

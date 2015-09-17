@@ -33,8 +33,8 @@ void ProgramCounter::p_PC() {
     sc_uint<32> v_DATA_IN;
     v_DATA_IN = i_DATA_IN.read();
 
-    if( v_DATA_IN > *lastAddress ) { // After last instruction
-        sc_stop();                  // End simulation
+    if( v_DATA_IN > (*lastAddress) ) { // After last instruction
+        sc_stop();                   // End simulation
         simulationEnded = true;
     }
 

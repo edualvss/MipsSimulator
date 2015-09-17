@@ -238,7 +238,7 @@ void Mips::p_signExtend() {
     sc_uint<32> v_SIGN_EXTENDED = 0;
     v_SIGN_EXTENDED.range(15,0) = w_IMED16.read();
 
-    if( v_SIGN_EXTENDED[5] == 1 ) {
+    if( v_SIGN_EXTENDED[15] == 1 ) {
         v_SIGN_EXTENDED(31,16) = 0xFFFF;
     }
 
@@ -271,13 +271,11 @@ void Mips::p_branch() {
     w_BRANCH_RESULT.write( result );
 }
 
-
 Mips::~Mips() {
 #ifdef DEBUG_METHODS
     std::cout << "Destructor Mips" << std::endl;
 #endif
 
-    sc_close_vcd_trace_file(tf);
     delete c_PC;
     delete c_PC_Control;
     delete c_InstructionMemory;

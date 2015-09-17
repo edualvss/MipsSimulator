@@ -11,9 +11,13 @@ class InstructionMemory;
 class DataMemory;
 class RegisterFile;
 class QTableWidget;
+class CycleStatus;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
+
+private:
+    int rowOfPC(unsigned int pc);
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -21,12 +25,15 @@ public:
 
     void loadInstructionMemory(InstructionMemory* );
     void loadDataMemory(DataMemory* );
-    void loadRegisterFile(RegisterFile* );
+    void showMessage(QString msg);
+    void updateStatus(CycleStatus* );
 
 signals:
     void sendInstructionFile(QString);
     void sendDataFile(QString);
     void simulate();
+    void nextStep();
+    void previousStep();
 
 private slots:
     void openInstructionFile();

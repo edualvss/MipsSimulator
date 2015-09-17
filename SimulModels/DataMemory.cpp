@@ -91,6 +91,8 @@ bool DataMemory::initialize(const char *filename) {
         return false;
     }
 
+    this->m_DATA.clear();
+
     int scanResult = 0;
     unsigned int address = DATAMEM_BOTTOM_ADDRESS;
     do {

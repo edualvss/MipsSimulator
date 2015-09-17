@@ -56,6 +56,8 @@ bool InstructionMemory::initialize(const char *filename) {
         return false;
     }
 
+    this->m_MEMORY.clear();
+
     int scanResult = 0;
     do {
         unsigned int hexValue;
