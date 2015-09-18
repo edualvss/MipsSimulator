@@ -12,6 +12,8 @@ int main(int argc, char* argv[]) {
 #endif
 
     QApplication app(argc,argv);
+    app.setOrganizationName("EAS");
+    app.setApplicationName("MipsSimulator");
     MainWindow mw;
     AppControl appCtrl(&mw);
     appCtrl.startApp();

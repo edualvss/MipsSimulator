@@ -14,6 +14,8 @@
 
 #include <time.h>
 
+#include <QThread> // sleep
+
 #ifdef DEBUG_METHODS
     #include <iostream>
 #endif
@@ -42,6 +44,7 @@ AppControl::AppControl(QObject *parent) : QObject(parent) {
     connect(mainWindow,SIGNAL(simulate()),this,SLOT(simulate()));
     connect(mainWindow,SIGNAL(nextStep()),this,SLOT(nextStep()));
     connect(mainWindow,SIGNAL(previousStep()),this,SLOT(previousStep()));
+    connect(mainWindow,SIGNAL(viewSimulationTime()),this,SLOT(showSimulationTime()));
 }
 
 void AppControl::startApp() {
@@ -114,6 +117,13 @@ void AppControl::simulate() {
 
     simulationTime = (t1 - t0);
     simulated = true;
+
+    // Sleep to update sc_curr_simcontext without errors
+    QThread::sleep(1); // 1 second
+    this->mainWindow->showMessageInStatusBar(tr("Simulated in: %1 ms")
+                                  .arg(QString::number(simulationTime))
+                                  ,0);
+    this->mainWindow->setEnabledSimulationTime(simulated);
 }
 
 void AppControl::updateSteps(std::vector<CycleStatus *> *newSteps) {
@@ -140,6 +150,7 @@ void AppControl::endSimulator() {
 
     started = false;
     simulated = false;
+    this->mainWindow->setEnabledSimulationTime(simulated);
 
 }
 
@@ -219,5 +230,14 @@ void AppControl::previousStep() {
 
     step--;
     this->mainWindow->updateStatus( steps->at(step) );
+
+}
+
+void AppControl::showSimulationTime() {
+#ifdef DEBUG_METHODS
+    std::cout << "AppControl::showSimulationTime" << std::endl;
+#endif
+
+    this->mainWindow->showMessage(tr("Simulated in: %1 ms").arg(QString::number(simulationTime)));
 
 }

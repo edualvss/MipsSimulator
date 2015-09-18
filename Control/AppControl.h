@@ -44,6 +44,7 @@ private slots:
     void nextStep();
     void previousStep();
     void simulate();
+    void showSimulationTime();
 };
 
 #endif // CONTROL_H
