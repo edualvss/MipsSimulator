@@ -289,4 +289,5 @@ Mips::~Mips() {
     delete c_MuxJalAddressRegFile;
     delete c_MuxJalDataRegFile;
     delete c_systemMonitor;
+
 }

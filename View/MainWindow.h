@@ -42,6 +42,7 @@ signals:
     void nextStep();
     void previousStep();
     void viewSimulationTime();
+    void closeWaveform();
 
 private slots:
     void openInstructionFile();

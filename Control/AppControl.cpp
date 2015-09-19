@@ -14,13 +14,9 @@
 
 #include <time.h>
 
-#include <QThread> // sleep
-
 #ifdef DEBUG_METHODS
     #include <iostream>
 #endif
-
-#include <QDebug>
 
 AppControl::AppControl(QObject *parent) : QObject(parent) {
 #ifdef DEBUG_METHODS
@@ -38,6 +34,7 @@ AppControl::AppControl(QObject *parent) : QObject(parent) {
     this->simulated = false;
     this->instructionMemoryLoaded = false;
     this->dataMemoryLoaded = false;
+    this->reseted = false;
 
     connect(mainWindow,SIGNAL(sendDataFile(QString)),this,SLOT(receiveDataFile(QString)));
     connect(mainWindow,SIGNAL(sendInstructionFile(QString)),this,SLOT(receiveInstructionFile(QString)));
@@ -45,6 +42,7 @@ AppControl::AppControl(QObject *parent) : QObject(parent) {
     connect(mainWindow,SIGNAL(nextStep()),this,SLOT(nextStep()));
     connect(mainWindow,SIGNAL(previousStep()),this,SLOT(previousStep()));
     connect(mainWindow,SIGNAL(viewSimulationTime()),this,SLOT(showSimulationTime()));
+    connect(mainWindow,SIGNAL(closeWaveform()),this,SLOT(resetSystemCContext()));
 }
 
 void AppControl::startApp() {
@@ -61,11 +59,12 @@ void AppControl::initSimulator() {
     std::cout << "AppControl::initSimulator" << std::endl;
 #endif
 
-    sc_curr_simcontext = new sc_simcontext;
-    sc_default_global_context = sc_curr_simcontext;
+    if(!reseted) {
+        sc_get_curr_simcontext()->reset();
+    }
 
     this->simulator = new Mips("Mips");
-    this->tester = new Testbench("MipsClockGeneretor");
+    this->tester = new Testbench("MipsClockGenerator");
     this->started = true;
     if( instructionMemoryLoaded ) {
         this->simulator->c_InstructionMemory->initialize( this->instructionFile.toStdString().c_str() );
@@ -112,14 +111,14 @@ void AppControl::simulate() {
 
     delete m;
     delete tb;
-    delete sc_curr_simcontext;
-    sc_curr_simcontext = 0;
 
     simulationTime = (t1 - t0);
     simulated = true;
+    reseted = false;
 
-    // Sleep to update sc_curr_simcontext without errors
-    QThread::sleep(1); // 1 second
+    this->mainWindow->showMessage( tr("Simulated in: %1 ms")
+                                   .arg(QString::number(simulationTime)) );
+
     this->mainWindow->showMessageInStatusBar(tr("Simulated in: %1 ms")
                                   .arg(QString::number(simulationTime))
                                   ,0);
@@ -150,6 +149,7 @@ void AppControl::endSimulator() {
 
     started = false;
     simulated = false;
+    reseted = false;
     this->mainWindow->setEnabledSimulationTime(simulated);
 
 }
@@ -239,5 +239,18 @@ void AppControl::showSimulationTime() {
 #endif
 
     this->mainWindow->showMessage(tr("Simulated in: %1 ms").arg(QString::number(simulationTime)));
+
+}
+
+void AppControl::resetSystemCContext() {
+#ifdef DEBUG_METHODS
+    std::cout << "AppControl::showSimulationTime" << std::endl;
+#endif
+
+    if( !reseted ) {
+        sc_get_curr_simcontext()->reset();
+        reseted = true;
+    }
+    this->mainWindow->showMessageInStatusBar(tr("Waveform closed!"),2000);
 
 }

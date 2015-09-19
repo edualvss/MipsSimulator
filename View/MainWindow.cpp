@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionNext_step, SIGNAL(triggered(bool)),this,SIGNAL(nextStep()));
     connect(ui->actionPrevious_Step,SIGNAL(triggered(bool)),this,SIGNAL(previousStep()));
     connect(ui->actionView_simulation_time,SIGNAL(triggered(bool)),this,SIGNAL(viewSimulationTime()));
+    connect(ui->actionEnd_Waveform,SIGNAL(triggered(bool)),this,SIGNAL(closeWaveform()));
 
     QDockWidget* regFileDock = new QDockWidget(tr("Register File"),this);
     regFileDock->setObjectName("regFileDock");
@@ -50,9 +51,9 @@ MainWindow::MainWindow(QWidget *parent) :
     dataMemoryDock->setWidget(ui->groupDataMemory);
     addDockWidget(Qt::LeftDockWidgetArea,dataMemoryDock);
 
-    QSettings windowSettings;
-    this->restoreGeometry(windowSettings.value("mainWindowGeometry").toByteArray());
-    this->restoreState(windowSettings.value("mainWindowState").toByteArray());
+//    QSettings windowSettings;
+//    this->restoreGeometry(windowSettings.value("mainWindowGeometry").toByteArray());
+//    this->restoreState(windowSettings.value("mainWindowState").toByteArray());
 
     ui->menuView->addActions( createPopupMenu()->actions() );
 

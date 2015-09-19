@@ -23,6 +23,7 @@ private:
     bool simulated;
     bool instructionMemoryLoaded;
     bool dataMemoryLoaded;
+    bool reseted;
 
     unsigned int simulationTime;
     unsigned int step;
@@ -45,6 +46,7 @@ private slots:
     void previousStep();
     void simulate();
     void showSimulationTime();
+    void resetSystemCContext();
 };
 
 #endif // CONTROL_H

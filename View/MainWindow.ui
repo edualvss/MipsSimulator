@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1094</width>
+    <width>1114</width>
     <height>801</height>
    </rect>
   </property>
@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="media.qrc">
-    <normaloff>:/icons/Latest_Article.png</normaloff>:/icons/Latest_Article.png</iconset>
+    <normaloff>:/icons/app_icon.png</normaloff>:/icons/app_icon.png</iconset>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
@@ -32,7 +32,7 @@
         <widget class="QTableWidget" name="tableDataMemory">
          <property name="minimumSize">
           <size>
-           <width>206</width>
+           <width>216</width>
            <height>0</height>
           </size>
          </property>
@@ -848,7 +848,7 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
         <widget class="QTableWidget" name="tableRegFile">
          <property name="minimumSize">
           <size>
-           <width>230</width>
+           <width>240</width>
            <height>0</height>
           </size>
          </property>
@@ -1603,7 +1603,7 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1094</width>
+     <width>1114</width>
      <height>26</height>
     </rect>
    </property>
@@ -1664,6 +1664,7 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
    <addaction name="actionPrevious_Step"/>
    <addaction name="actionNext_step"/>
    <addaction name="actionView_simulation_time"/>
+   <addaction name="actionEnd_Waveform"/>
   </widget>
   <action name="actionLoad_Instructions">
    <property name="icon">
@@ -1749,6 +1750,18 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="statusTip">
     <string>View simulation time</string>
+   </property>
+  </action>
+  <action name="actionEnd_Waveform">
+   <property name="icon">
+    <iconset resource="media.qrc">
+     <normaloff>:/icons/closewave.png</normaloff>:/icons/closewave.png</iconset>
+   </property>
+   <property name="text">
+    <string>End Waveform</string>
+   </property>
+   <property name="toolTip">
+    <string>End Waveform</string>
    </property>
   </action>
  </widget>
