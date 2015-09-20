@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1114</width>
+    <width>1162</width>
     <height>801</height>
    </rect>
   </property>
@@ -128,13 +128,13 @@ margin-top: 1ex;</string>
               <widget class="QLabel" name="l_i_OP">
                <property name="minimumSize">
                 <size>
-                 <width>50</width>
+                 <width>58</width>
                  <height>22</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>50</width>
+                 <width>58</width>
                  <height>22</height>
                 </size>
                </property>
@@ -150,13 +150,13 @@ margin-top: 1ex;</string>
               <widget class="QLabel" name="l_i_RS">
                <property name="minimumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>22</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>22</height>
                 </size>
                </property>
@@ -172,13 +172,13 @@ margin-top: 1ex;</string>
               <widget class="QLabel" name="l_i_RT">
                <property name="minimumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>22</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>22</height>
                 </size>
                </property>
@@ -200,7 +200,7 @@ margin-top: 1ex;</string>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>137</width>
+                 <width>158</width>
                  <height>22</height>
                 </size>
                </property>
@@ -351,13 +351,13 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
               <widget class="QLabel" name="label_16">
                <property name="minimumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>25</height>
                 </size>
                </property>
@@ -373,13 +373,13 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
               <widget class="QLabel" name="label_14">
                <property name="minimumSize">
                 <size>
-                 <width>50</width>
+                 <width>58</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>50</width>
+                 <width>58</width>
                  <height>25</height>
                 </size>
                </property>
@@ -395,13 +395,13 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
               <widget class="QLabel" name="label_15">
                <property name="minimumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>25</height>
                 </size>
                </property>
@@ -417,13 +417,13 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
               <widget class="QLabel" name="label_17">
                <property name="minimumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>25</height>
                 </size>
                </property>
@@ -439,13 +439,13 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
               <widget class="QLabel" name="label_18">
                <property name="minimumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>25</height>
                 </size>
                </property>
@@ -461,13 +461,13 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
               <widget class="QLabel" name="label_23">
                <property name="minimumSize">
                 <size>
-                 <width>50</width>
+                 <width>58</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>50</width>
+                 <width>58</width>
                  <height>25</height>
                 </size>
                </property>
@@ -490,13 +490,13 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
               <widget class="QLabel" name="l_r_RT">
                <property name="minimumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>22</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>22</height>
                 </size>
                </property>
@@ -512,13 +512,13 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
               <widget class="QLabel" name="l_r_OP">
                <property name="minimumSize">
                 <size>
-                 <width>50</width>
+                 <width>58</width>
                  <height>22</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>50</width>
+                 <width>58</width>
                  <height>22</height>
                 </size>
                </property>
@@ -534,13 +534,13 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
               <widget class="QLabel" name="l_r_RS">
                <property name="minimumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>22</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>22</height>
                 </size>
                </property>
@@ -556,13 +556,13 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
               <widget class="QLabel" name="l_r_RD">
                <property name="minimumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>22</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>22</height>
                 </size>
                </property>
@@ -578,13 +578,13 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
               <widget class="QLabel" name="l_r_SHAMT">
                <property name="minimumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>22</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>42</width>
+                 <width>50</width>
                  <height>22</height>
                 </size>
                </property>
@@ -600,13 +600,13 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
               <widget class="QLabel" name="l_r_FUNCTION">
                <property name="minimumSize">
                 <size>
-                 <width>50</width>
+                 <width>58</width>
                  <height>22</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>50</width>
+                 <width>58</width>
                  <height>22</height>
                 </size>
                </property>
@@ -743,13 +743,13 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
               <widget class="QLabel" name="l_j_OP">
                <property name="minimumSize">
                 <size>
-                 <width>50</width>
+                 <width>58</width>
                  <height>22</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>50</width>
+                 <width>58</width>
                  <height>22</height>
                 </size>
                </property>
@@ -1603,7 +1603,7 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1114</width>
+     <width>1162</width>
      <height>26</height>
     </rect>
    </property>
@@ -1664,7 +1664,6 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
    <addaction name="actionPrevious_Step"/>
    <addaction name="actionNext_step"/>
    <addaction name="actionView_simulation_time"/>
-   <addaction name="actionEnd_Waveform"/>
   </widget>
   <action name="actionLoad_Instructions">
    <property name="icon">
@@ -1750,18 +1749,6 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="statusTip">
     <string>View simulation time</string>
-   </property>
-  </action>
-  <action name="actionEnd_Waveform">
-   <property name="icon">
-    <iconset resource="media.qrc">
-     <normaloff>:/icons/closewave.png</normaloff>:/icons/closewave.png</iconset>
-   </property>
-   <property name="text">
-    <string>End Waveform</string>
-   </property>
-   <property name="toolTip">
-    <string>End Waveform</string>
    </property>
   </action>
  </widget>

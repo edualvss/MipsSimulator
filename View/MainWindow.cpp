@@ -1,13 +1,10 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
-#include "SimulModels/InstructionMemory.h"
-#include "SimulModels/DataMemory.h"
-#include "SimulModels/RegisterFile.h"
-#include "SimulModels/Decoder.h"
-#include "SimulModels/ProgramCounter.h"
 #include "Model/Instruction.h"
 #include "Model/CycleStatus.h"
+#include "Model/Decoder.h"
+#include "Model/RegisterFile.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -15,12 +12,9 @@
 #include <QCloseEvent>
 #include <QDockWidget>
 
-#include <QDebug>
-
 #ifdef DEBUG_METHODS
     #include <iostream>
 #endif
-
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -40,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionNext_step, SIGNAL(triggered(bool)),this,SIGNAL(nextStep()));
     connect(ui->actionPrevious_Step,SIGNAL(triggered(bool)),this,SIGNAL(previousStep()));
     connect(ui->actionView_simulation_time,SIGNAL(triggered(bool)),this,SIGNAL(viewSimulationTime()));
-    connect(ui->actionEnd_Waveform,SIGNAL(triggered(bool)),this,SIGNAL(closeWaveform()));
 
     QDockWidget* regFileDock = new QDockWidget(tr("Register File"),this);
     regFileDock->setObjectName("regFileDock");
@@ -51,9 +44,9 @@ MainWindow::MainWindow(QWidget *parent) :
     dataMemoryDock->setWidget(ui->groupDataMemory);
     addDockWidget(Qt::LeftDockWidgetArea,dataMemoryDock);
 
-//    QSettings windowSettings;
-//    this->restoreGeometry(windowSettings.value("mainWindowGeometry").toByteArray());
-//    this->restoreState(windowSettings.value("mainWindowState").toByteArray());
+    QSettings windowSettings;
+    this->restoreGeometry(windowSettings.value("mainWindowGeometry").toByteArray());
+    this->restoreState(windowSettings.value("mainWindowState").toByteArray());
 
     ui->menuView->addActions( createPopupMenu()->actions() );
 
@@ -138,47 +131,52 @@ void MainWindow::clearTable(QTableWidget *tw) {
     }
 }
 
-void MainWindow::loadDataMemory(DataMemory *dm) {
+void MainWindow::loadDataMemory(std::vector<unsigned int> *data) {
 #ifdef DEBUG_METHODS
     std::cout << "MainWindow::loadDataMemory" << std::endl;
 #endif
 
-    QMap<unsigned int, sc_uint<32> > map(dm->m_DATA);
-    QMap<unsigned int, sc_uint<32> >::const_iterator it = map.constBegin();
-
     clearTable( ui->tableDataMemory );
     ui->tableDataMemory->clearContents();
 
-    ui->tableDataMemory->setRowCount(map.size());
-    int i = 0;
-    while( it != map.constEnd() ) {
-        unsigned int addr = it.key();
-        unsigned int val = it.value();
-        ui->tableDataMemory->setItem( i, 0, new QTableWidgetItem( QString("0x%1").arg(addr,8,16,QLatin1Char('0')) ) );
-        ui->tableDataMemory->setItem( i, 1, new QTableWidgetItem( QString("0x%1").arg(val,8,16,QLatin1Char('0')) ) );
-        i++;
-        it++;
+    ui->tableDataMemory->setRowCount(data->size());
+    for( unsigned int i = 0; i < data->size(); i++ ) {
+        unsigned int address = i*4 + 0x10010000;
+        unsigned int value = data->at(i);
+        QTableWidgetItem* itAddress = new QTableWidgetItem( QString("0x%1").arg(address,8,16,QLatin1Char('0')) );
+        QString tipAddress = tr("Value: %1, 0b%2")
+                .arg( address )
+                .arg( address ,32,2,QLatin1Char('0'));
+        itAddress->setStatusTip( tipAddress );
+        itAddress->setToolTip( tipAddress );
+        QTableWidgetItem* itValue = new QTableWidgetItem( QString("0x%1").arg(value,8,16,QLatin1Char('0')) );
+        QString tipValue = tr("Value: %1, 0b%2")
+                .arg( value )
+                .arg( value ,32,2,QLatin1Char('0'));
+        itValue->setStatusTip(tipValue);
+        itValue->setToolTip(tipValue);
+        ui->tableDataMemory->setItem( i, 0, itAddress );
+        ui->tableDataMemory->setItem( i, 1, itValue );
     }
 
 }
 
-void MainWindow::loadInstructionMemory(InstructionMemory *im) {
+void MainWindow::loadInstructionMemory(std::vector<unsigned int> *instructions) {
 #ifdef DEBUG_METHODS
     std::cout << "MainWindow::loadInstructionMemory" << std::endl;
 #endif
 
-    std::vector<sc_uint<32> > vec = im->getInstructions();
-
     clearTable( ui->tableInstructionMemory );
     ui->tableInstructionMemory->clearContents();
 
-    ui->tableInstructionMemory->setRowCount( vec.size() );
+    ui->tableInstructionMemory->setRowCount( instructions->size() );
 
-    for(unsigned int i = 0; i < vec.size(); i++ ) {
-        unsigned int address = i*4 + INITIAL_PC_ADDRESS;
+    for(unsigned int i = 0; i < instructions->size(); i++ ) {
+        unsigned int address = i*4 + 0x00400000;
+        unsigned int instruction = instructions->at(i);
         ui->tableInstructionMemory->setItem( i,0, new QTableWidgetItem(QString("0x%1").arg(address,8,16,QLatin1Char('0'))) );
-        ui->tableInstructionMemory->setItem( i,1, new QTableWidgetItem( QString("%1").arg(vec[i],8,16,QLatin1Char('0')) ) );
-        Instruction* ins = Decoder::getInstructionDecoded(vec[i]);
+        ui->tableInstructionMemory->setItem( i,1, new QTableWidgetItem( QString("%1").arg(instruction,8,16,QLatin1Char('0')) ) );
+        Instruction* ins = Decoder::getInstructionDecoded(instruction);
         ui->tableInstructionMemory->setItem(i,2, new QTableWidgetItem(QString::fromStdString(ins->getFormatedInstruction())));
     }
 
@@ -209,7 +207,12 @@ void MainWindow::updateStatus(CycleStatus *cycleInfo) {
         QTableWidgetItem* regItem = ui->tableRegFile->item(i,2);
         QString currentText = regItem->text();
         QString newText = QString("0x%1").arg(cycleInfo->rf_registers[i],8,16,QLatin1Char('0'));
+        QString tipValue = tr("Value: %1, 0b%2")
+                .arg( cycleInfo->rf_registers[i] )
+                .arg( cycleInfo->rf_registers[i] ,32,2,QLatin1Char('0'));
         regItem->setText( newText );
+        regItem->setStatusTip( tipValue );
+        regItem->setToolTip( tipValue );
         if( newText != currentText ) {
             ui->tableRegFile->selectRow( i );
             ui->statusbar->showMessage(tr("Register: %1 updated").arg(QString::fromStdString(RegisterFile::REG_NAMES[i])),2000);
@@ -410,6 +413,13 @@ void MainWindow::updateInstructionFormat(Instruction *ins) {
             break;
         }
     }
+}
+
+void MainWindow::setEnabledSimulate(bool enabled) {
+#ifdef DEBUG_METHODS
+    std::cout << "MainWindow::setEnabledSimulate" << std::endl;
+#endif
+    this->ui->actionSimulate->setEnabled(enabled);
 }
 
 void MainWindow::setEnabledSimulationTime(bool enabled) {

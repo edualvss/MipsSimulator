@@ -4,34 +4,31 @@
 #include <QObject>
 
 class MainWindow;
-class Mips;
-class Testbench;
 class CycleStatus;
+class QProcess;
 
 class AppControl : public QObject {
     Q_OBJECT
 private:
     MainWindow* mainWindow;
+    QProcess* mipsProcess;
     QString instructionFile;
     QString dataFile;
-    Mips* simulator;
-    Testbench* tester;
     std::vector<CycleStatus *>* steps;
-    int clockTime;
 
-    bool started;
     bool simulated;
     bool instructionMemoryLoaded;
     bool dataMemoryLoaded;
-    bool reseted;
 
-    unsigned int simulationTime;
+    unsigned long int simulationTimeS;
+    unsigned long int simulationTimeUS;
     unsigned int step;
 
-    void initSimulator();
-    void endSimulator();
     void updateSteps(std::vector<CycleStatus *>* );
+    std::vector<unsigned int>* loadFile(QString filename);
 
+    void loadStepsInJson();
+    void loadStepsInCSV();
 public:
     explicit AppControl(QObject *parent = 0);
 
@@ -46,7 +43,8 @@ private slots:
     void previousStep();
     void simulate();
     void showSimulationTime();
-    void resetSystemCContext();
+    void endSimulation();
+
 };
 
 #endif // CONTROL_H

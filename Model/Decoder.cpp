@@ -10,45 +10,15 @@ FILE   : Decoder.cpp
 
 #include "Model/Instruction.h"
 
-Decoder::Decoder(sc_module_name mn) : sc_module(mn) {
+#ifdef DEBUG_METHODS
+    #include <iostream>
+#endif
+
+Decoder::Decoder() {
 #ifdef DEBUG_METHODS
     std::cout << "Constructor Decoder" << std::endl;
 #endif
 
-    SC_METHOD(p_decode);
-    dont_initialize();
-    sensitive << i_DATA_IN;
-
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void Decoder::p_decode() {
-////////////////////////////////////////////////////////////////////////////////
-#ifdef DEBUG_METHODS
-    std::cout << "Decoder::p_decode" << std::endl;
-#endif
-
-    // Temporary variable for manipulation bit vector
-    sc_uint<32> v_DATA_IN;
-
-    v_DATA_IN = i_DATA_IN.read();
-
-    o_DATA_IMED26.write(v_DATA_IN(25,0));
-    o_DATA_IMED16.write(v_DATA_IN(15,0));
-    o_DATA_OP.write(v_DATA_IN(31,26));
-    o_DATA_RS.write(v_DATA_IN(25,21));
-    o_DATA_RT.write(v_DATA_IN(20,16));
-    o_DATA_RD.write(v_DATA_IN(15,11));
-    o_DATA_SHAMT.write( v_DATA_IN(10,6) );
-    o_DATA_FUNCTION.write(v_DATA_IN(5,0));
-}
-
-Instruction* Decoder::getInstructionDecoded() {
-#ifdef DEBUG_METHODS
-    std::cout << "Decoder::getInstructionDecoded" << std::endl;
-#endif
-
-    return Decoder::getInstructionDecoded(i_DATA_IN.read());
 }
 
 Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
@@ -93,17 +63,25 @@ Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
      *
      *  % Not implemented
      */
-    sc_uint<32> v_INS;
-    v_INS = instruction;
 
-    unsigned int op = v_INS(31,26);
-    unsigned int rs = v_INS(25,21);
-    unsigned int rt = v_INS(20,16);
-    unsigned int rd = v_INS(15,11);
-    unsigned int shamt = v_INS(10,6);
-    unsigned int function = v_INS(5,0);
-    unsigned int imed26 = v_INS(25,0);
-    unsigned int imed16 = v_INS(15,0);
+//    unsigned int op = v_INS(31,26);
+//    unsigned int rs = v_INS(25,21);
+//    unsigned int rt = v_INS(20,16);
+//    unsigned int rd = v_INS(15,11);
+//    unsigned int shamt = v_INS(10,6);
+//    unsigned int function = v_INS(5,0);
+//    unsigned int imed26 = v_INS(25,0);
+//    unsigned int imed16 = v_INS(15,0);
+
+    unsigned int op =  (instruction >> 26) & 0b111111;
+    unsigned int rs = (instruction >> 21) & 0b11111;
+    unsigned int rt = (instruction >> 16) & 0b11111;
+    unsigned int rd = (instruction >> 11) & 0b11111;
+    unsigned int shamt = (instruction >> 6) & 0b11111;
+    unsigned int function = instruction & 0b111111;
+    unsigned int imed26 = instruction & 0x3FFFFFF;
+    unsigned int imed16 = instruction & 0xFFFF;
+
 
     Instruction* ins = new Instruction(instruction);
 

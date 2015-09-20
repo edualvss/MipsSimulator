@@ -2,16 +2,9 @@
 #include "Control/AppControl.h"
 #include "View/MainWindow.h"
 
-#include <systemc>
-
 #ifdef DEBUG_METHODS
     #include <iostream>
 #endif
-
-// Only because SystemC >= 2.3 need it
-int sc_main(int, char **) {
-    return 0;
-}
 
 int main(int argc, char* argv[]) {
 #ifdef DEBUG_METHODS
@@ -26,4 +19,3 @@ int main(int argc, char* argv[]) {
     appCtrl.startApp();
     return app.exec();
 }
-

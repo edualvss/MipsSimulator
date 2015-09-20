@@ -2,39 +2,20 @@ QT = core gui widgets
 TEMPLATE = app
 
 HEADERS += \
-    SimulModels/ProgramCounter.h \
-    SimulModels/RegisterFile.h \
-    SimulModels/InstructionMemory.h \
-    SimulModels/Control.h \
-    SimulModels/DataMemory.h \
-    SimulModels/Decoder.h \
-    SimulModels/Mux2x1.h \
-    SimulModels/Alu.h \
-    SimulModels/PC_Control.h \
-    SimulModels/MipsTop.h \
-    SimulModels/Testbench.h \
     View/MainWindow.h \
     Control/AppControl.h \
     Model/Instruction.h \
     Model/CycleStatus.h \
-    SimulModels/SystemMonitor.h
+    Model/Decoder.h \
+    Model/RegisterFile.h
 
 SOURCES += main.cpp \
-    SimulModels/ProgramCounter.cpp \
-    SimulModels/RegisterFile.cpp \
-    SimulModels/InstructionMemory.cpp \
-    SimulModels/Control.cpp \
-    SimulModels/DataMemory.cpp \
-    SimulModels/Decoder.cpp \
-    SimulModels/Mux2x1.cpp \
-    SimulModels/Alu.cpp \
-    SimulModels/PC_Control.cpp \
-    SimulModels/MipsTop.cpp \
     View/MainWindow.cpp \
     Control/AppControl.cpp \
     Model/Instruction.cpp \
     Model/CycleStatus.cpp \
-    SimulModels/SystemMonitor.cpp
+    Model/Decoder.cpp \
+    Model/RegisterFile.cpp
 
 CONFIG -= debug_and_release
 
@@ -42,26 +23,20 @@ TARGET  = SimMips
 DESTDIR = bin
 OBJECTS_DIR = objs
 
-SYSTEMC_PATH= c:/SystemC
-
-INCLUDEPATH = $${SYSTEMC_PATH}/include
-
-win32 {
-  LIBS += $${SYSTEMC_PATH}/lib-mingw/libsystemc.a
+# OS X specific settings
+mac {
+    ICON = app_icon.icns
+    FRAMEWORK_HEADERS.version = "1.0"
+    QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
 }
 
-unix {
-    contains(QMAKE_HOST.arch, x86_64) {
-         # 64-bit Unix
-        mac {
-            LIBS = -L$${SYSTEMC_PATH}/lib-macosx64 -lsystemc -Xlinker -rpath -Xlinker $${SYSTEMC_PATH}/lib-macosx64
-        } else {
-            LIBS = -L$${SYSTEMC_PATH}/lib-linux64 -lsystemc -Xlinker -rpath -Xlinker $${SYSTEMC_PATH}/lib-linux64
-        }
-    } else {
-        # 32-bit Unix not OS X
-        LIBS = -L$${SYSTEMC_PATH}/lib-linux -lsystemc -Xlinker -rpath -Xlinker $${SYSTEMC_PATH}/lib-linux
-    }
+# Win32 specific settings
+win32 {
+    QMAKE_TARGET_COMPANY = "EAS"
+    QMAKE_TARGET_PRODUCT = MipsSimulator
+    QMAKE_TARGET_DESCRIPTION = "A front-end to SystemC Mips simulator"
+    QMAKE_TARGET_COPYRIGHT = "Copyright (C) 2015 Eduardo Alves da Silva"
+    RC_ICONS = app_icon.ico
 }
 
 # Debug define

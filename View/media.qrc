@@ -7,6 +7,5 @@
         <file>icons/previous.png</file>
         <file>icons/simulate.png</file>
         <file>icons/time.png</file>
-        <file>icons/closewave.png</file>
     </qresource>
 </RCC>

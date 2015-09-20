@@ -27,7 +27,6 @@ Instruction::Instruction(unsigned int instruction) : instruction(instruction) {
 
 }
 
-#include <iostream>
 #include <sstream>
 #include <string>
 #include <ostream>

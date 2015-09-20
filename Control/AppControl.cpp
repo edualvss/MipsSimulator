@@ -1,18 +1,19 @@
 #include "AppControl.h"
 
 #include "View/MainWindow.h"
-#include "SimulModels/MipsTop.h"
-#include "SimulModels/testbench.h"
 
 #include "Model/Instruction.h"
-#include "SimulModels/Decoder.h"
-#include "SimulModels/RegisterFile.h"
-#include "SimulModels/InstructionMemory.h"
-#include "SimulModels/DataMemory.h"
-#include "SimulModels/SystemMonitor.h"
 #include "Model/CycleStatus.h"
+#include "Model/Decoder.h"
+#include "Model/RegisterFile.h"
 
-#include <time.h>
+#include <QProcess>
+#include <QDir>
+#include <QApplication>
+
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 #ifdef DEBUG_METHODS
     #include <iostream>
@@ -23,18 +24,16 @@ AppControl::AppControl(QObject *parent) : QObject(parent) {
     std::cout << "Constructor AppControl" << std::endl;
 #endif
 
-    this->simulator = NULL;
-    this->tester = NULL;
     this->steps = NULL;
-    this->clockTime = 10;
     this->mainWindow = static_cast<MainWindow*>(parent);
 
     this->step = 0;
-    this->started = false;
     this->simulated = false;
     this->instructionMemoryLoaded = false;
     this->dataMemoryLoaded = false;
-    this->reseted = false;
+
+    this->simulationTimeS = 0;
+    this->simulationTimeUS = 0;
 
     connect(mainWindow,SIGNAL(sendDataFile(QString)),this,SLOT(receiveDataFile(QString)));
     connect(mainWindow,SIGNAL(sendInstructionFile(QString)),this,SLOT(receiveInstructionFile(QString)));
@@ -42,7 +41,6 @@ AppControl::AppControl(QObject *parent) : QObject(parent) {
     connect(mainWindow,SIGNAL(nextStep()),this,SLOT(nextStep()));
     connect(mainWindow,SIGNAL(previousStep()),this,SLOT(previousStep()));
     connect(mainWindow,SIGNAL(viewSimulationTime()),this,SLOT(showSimulationTime()));
-    connect(mainWindow,SIGNAL(closeWaveform()),this,SLOT(resetSystemCContext()));
 }
 
 void AppControl::startApp() {
@@ -54,75 +52,61 @@ void AppControl::startApp() {
 
 }
 
-void AppControl::initSimulator() {
-#ifdef DEBUG_METHODS
-    std::cout << "AppControl::initSimulator" << std::endl;
-#endif
-
-    if(!reseted) {
-        sc_get_curr_simcontext()->reset();
-    }
-
-    this->simulator = new Mips("Mips");
-    this->tester = new Testbench("MipsClockGenerator");
-    this->started = true;
-    if( instructionMemoryLoaded ) {
-        this->simulator->c_InstructionMemory->initialize( this->instructionFile.toStdString().c_str() );
-    }
-    if( dataMemoryLoaded ) {
-        this->simulator->c_DataMemory->initialize( this->dataFile.toStdString().c_str() );
-    }
-
-}
-
 void AppControl::simulate() {
 #ifdef DEBUG_METHODS
     std::cout << "AppControl::simulate" << std::endl;
 #endif
-
-    if( simulated ) {
-        endSimulator();
-        initSimulator();
-    }
 
     if( !instructionMemoryLoaded ) {
         this->mainWindow->showMessage( tr("Instruction memory not initialized") );
         return;
     }
 
-    step = 0;
+    // Disable simulate button
+    this->mainWindow->setEnabledSimulate(false);
 
-    sc_clock         w_CLK("CLK",10,SC_NS);      // System clock with 10 ns period
-    sc_signal<bool>  w_RST;
+    // Create a process
+    mipsProcess = new QProcess(this);
+    connect(mipsProcess,SIGNAL(finished(int)),this,SLOT(endSimulation()));
+    QString workDir = QDir::homePath()+"/MipsSimulator";
+    mipsProcess->setWorkingDirectory(workDir);
+    QDir d(workDir);
+    if( !d.exists() ) {
+        d.mkpath(".");
+    }
+    mipsProcess->setProgram( qApp->applicationDirPath()+"/Simulator/SysMips" );
+    QStringList args;
+    args.append( workDir );
+    args.append( instructionFile );
+    if( dataMemoryLoaded ) {
+        args.append(dataFile);
+    }
+    mipsProcess->setArguments( args );
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    mipsProcess->start();
+    this->step = 0;
+}
 
-    Testbench* tb = tester;
-    tb->i_CLK(w_CLK);
-    tb->o_RST(w_RST);
+void AppControl::endSimulation() {
+#ifdef DEBUG_METHODS
+    std::cout << "AppControl::endSimulation" << std::endl;
+#endif
 
-    Mips* m = simulator;
-    m->i_CLK(w_CLK);
-    m->i_RST(w_RST);
+    this->loadStepsInCSV();
 
-    clock_t t0 = clock();
-    sc_start();
-    clock_t t1 = clock();
+    QApplication::restoreOverrideCursor();
+    mipsProcess->deleteLater();
+    this->mainWindow->showMessage( tr("Simulated in: %1 s and %2 us")
+                                   .arg(QString::number(simulationTimeS))
+                                   .arg(QString::number(simulationTimeUS)));
 
-    this->updateSteps( m->c_systemMonitor->getSteps() );
-
-    delete m;
-    delete tb;
-
-    simulationTime = (t1 - t0);
+    this->mainWindow->showMessageInStatusBar(tr("Simulated in: %1 s and %2 us")
+                                             .arg(QString::number(simulationTimeS))
+                                             .arg(QString::number(simulationTimeUS)),0);
     simulated = true;
-    reseted = false;
-
-    this->mainWindow->showMessage( tr("Simulated in: %1 ms")
-                                   .arg(QString::number(simulationTime)) );
-
-    this->mainWindow->showMessageInStatusBar(tr("Simulated in: %1 ms")
-                                  .arg(QString::number(simulationTime))
-                                  ,0);
     this->mainWindow->setEnabledSimulationTime(simulated);
+    this->mainWindow->setEnabledSimulate(true);
+
 }
 
 void AppControl::updateSteps(std::vector<CycleStatus *> *newSteps) {
@@ -142,17 +126,6 @@ void AppControl::updateSteps(std::vector<CycleStatus *> *newSteps) {
 
 }
 
-void AppControl::endSimulator() {
-#ifdef DEBUG_METHODS
-    std::cout << "AppControl::endSimulator" << std::endl;
-#endif
-
-    started = false;
-    simulated = false;
-    reseted = false;
-    this->mainWindow->setEnabledSimulationTime(simulated);
-
-}
 
 void AppControl::receiveDataFile(QString filename) {
 #ifdef DEBUG_METHODS
@@ -161,17 +134,19 @@ void AppControl::receiveDataFile(QString filename) {
 
     this->dataFile = filename;
     this->dataMemoryLoaded = true;
-    if( !started ) {
-        initSimulator();
-    } else {
-        if( simulated ) {
-            endSimulator();
-            initSimulator();
-        }
-        this->simulator->c_DataMemory->initialize( filename.toStdString().c_str() );
+
+    std::vector<unsigned int>* data = this->loadFile(filename);
+
+    if( data == NULL ) {
+        this->mainWindow->showMessage(tr("Failed to open data memory file"));
+        this->dataMemoryLoaded = false;
+        return;
     }
 
-    this->mainWindow->loadDataMemory( simulator->c_DataMemory );
+    this->mainWindow->loadDataMemory( data );
+
+    data->clear();
+    delete data;
 }
 
 void AppControl::receiveInstructionFile( QString filename ) {
@@ -181,18 +156,18 @@ void AppControl::receiveInstructionFile( QString filename ) {
 
     this->instructionFile = filename;
     this->instructionMemoryLoaded = true;
-    if( !started ) {
-        initSimulator();
-    } else {
-        if( simulated ) {
-            endSimulator();
-            initSimulator();
-        }
-        this->simulator->c_InstructionMemory->initialize( filename.toStdString().c_str() );
+
+    std::vector<unsigned int>* data = this->loadFile(filename);
+    if( data == NULL ) {
+        this->mainWindow->showMessage(tr("Failed to open instruction memory file"));
+        this->instructionMemoryLoaded = false;
+        return;
     }
 
-    this->mainWindow->loadInstructionMemory( simulator->c_InstructionMemory );
+    this->mainWindow->loadInstructionMemory( data );
 
+    data->clear();
+    delete data;
 }
 
 void AppControl::nextStep() {
@@ -238,19 +213,181 @@ void AppControl::showSimulationTime() {
     std::cout << "AppControl::showSimulationTime" << std::endl;
 #endif
 
-    this->mainWindow->showMessage(tr("Simulated in: %1 ms").arg(QString::number(simulationTime)));
+    this->mainWindow->showMessage(tr("Simulated in: %1 s and %2 us")
+                                  .arg(QString::number(simulationTimeS))
+                                  .arg(QString::number(simulationTimeUS)));
 
 }
 
-void AppControl::resetSystemCContext() {
+std::vector<unsigned int>* AppControl::loadFile(QString filename) {
 #ifdef DEBUG_METHODS
-    std::cout << "AppControl::showSimulationTime" << std::endl;
+    std::cout << "AppControl::loadFile" << std::endl;
 #endif
 
-    if( !reseted ) {
-        sc_get_curr_simcontext()->reset();
-        reseted = true;
-    }
-    this->mainWindow->showMessageInStatusBar(tr("Waveform closed!"),2000);
+    FILE* file;
 
+    if( (file = fopen(filename.toStdString().c_str(),"rt") ) == NULL ) {
+        return NULL;
+    }
+
+    int scanResult = 0;
+    std::vector<unsigned int>* data = new std::vector<unsigned int>();
+    do {
+        int hexValue;
+        scanResult = fscanf(file,"%x",&hexValue);
+        data->push_back(hexValue);
+    } while( scanResult != EOF );
+
+    fclose(file);
+
+    // Remove duplicate last value
+    data->pop_back();
+
+    return data;
+}
+
+void AppControl::loadStepsInCSV() {
+#ifdef DEBUG_METHODS
+    std::cout << "AppControl::loadStepsInCSV" << std::endl;
+#endif
+
+    QFile loadFile(QDir::homePath()+"/MipsSimulator/SimulationSteps.csv");
+
+    if (!loadFile.open(QIODevice::ReadOnly)) {
+        this->mainWindow->showMessage(tr("Couldn't open simulations status file."));
+        return;
+    }
+
+    std::vector<CycleStatus *>* newSteps = new std::vector<CycleStatus *>();
+
+    QByteArray saveData = loadFile.readAll();
+    loadFile.close();
+
+    QList<QByteArray> lines = saveData.split('\n');
+    QByteArray line1 = lines.at(1);
+    line1 = line1.simplified();
+    QList<QByteArray> times = line1.split(',');
+    simulationTimeS = times[0].toULong();
+    simulationTimeUS = times[1].toULong();
+
+    for( int i = 5; i < lines.size(); i+=2 ) {
+        CycleStatus* cycle = new CycleStatus();
+        QByteArray lineI = lines.at(i);
+        lineI = lineI.simplified();
+        QList<QByteArray> fieldsLineI = lineI.split(',');
+        cycle->cycleNumber = fieldsLineI[0].toULongLong();
+        cycle->currentPC = fieldsLineI[1].toUInt();
+        cycle->nextPC = fieldsLineI[2].toUInt();
+        cycle->instruction = Decoder::getInstructionDecoded( fieldsLineI[3].toUInt() );
+        cycle->rf_readAddress1 = fieldsLineI[4].toUShort();
+        cycle->rf_readAddress2 = fieldsLineI[5].toUShort();
+        cycle->rf_writeAddress = fieldsLineI[6].toUShort();
+        cycle->rf_dataIn = fieldsLineI[7].toUInt();
+        cycle->rf_dataOut1 = fieldsLineI[8].toUInt();
+        cycle->rf_dataOut2 = fieldsLineI[9].toUInt();
+        cycle->alu_op = fieldsLineI[10].toUShort();
+        cycle->alu_in1 = fieldsLineI[11].toUInt();
+        cycle->alu_in2 = fieldsLineI[12].toUInt();
+        cycle->alu_zero = fieldsLineI[13].toUInt();
+        cycle->dataOut = fieldsLineI[14].toUInt();
+        cycle->dvc = fieldsLineI[15].toUInt();
+        cycle->branch = fieldsLineI[16].toUInt();
+        cycle->jr = fieldsLineI[17].toUInt();
+        cycle->jal = fieldsLineI[18].toUInt();
+        cycle->dvi = fieldsLineI[19].toUInt();
+        cycle->regDst = fieldsLineI[20].toUInt();
+        cycle->memRead = fieldsLineI[21].toUInt();
+        cycle->memToReg = fieldsLineI[22].toUInt();
+        cycle->memWrite = fieldsLineI[23].toUInt();
+        cycle->aluSrc = fieldsLineI[24].toUInt();
+        cycle->regWrite = fieldsLineI[25].toUInt();
+
+        for( int x = 0; x < 32; x++) {
+            cycle->rf_registers[x] = fieldsLineI[26+x].toUInt();
+        }
+
+        QByteArray lineI2 = lines.at(i+1);
+        lineI2 = lineI2.simplified();
+        QList<QByteArray> fieldsLineI2 = lineI2.split(',');
+        for( int x = 0; x < fieldsLineI2.size(); x++ ) {
+            unsigned int address = x*4 + 0x10010000;
+            cycle->insert( address, fieldsLineI2[x].toUInt() );
+        }
+
+        newSteps->push_back(cycle);
+    }
+
+    this->updateSteps(newSteps);
+
+}
+
+void AppControl::loadStepsInJson() {
+#ifdef DEBUG_METHODS
+    std::cout << "AppControl::loadStepsInJson" << std::endl;
+#endif
+
+    QFile loadFile(QDir::homePath()+"/MipsSimulator/SimulationSteps.json");
+
+    if (!loadFile.open(QIODevice::ReadOnly)) {
+        this->mainWindow->showMessage(tr("Couldn't open simulations status file."));
+        return;
+    }
+
+    std::vector<CycleStatus *>* newSteps = new std::vector<CycleStatus *>();
+
+    QByteArray saveData = loadFile.readAll();
+    loadFile.close();
+    saveData = saveData.simplified();
+
+    QJsonDocument loadDoc(  QJsonDocument::fromJson(saveData) );
+
+    QJsonObject json = loadDoc.object();
+
+    simulationTimeS = json["simTimeS"].toInt();
+    simulationTimeUS = json["simTimeUS"].toInt();
+
+    QJsonArray jsonSteps = json["steps"].toArray();
+    long int i;
+    for( i = 0; i < jsonSteps.size(); i++ ) {
+        QJsonObject jsonStep = jsonSteps.at(i).toObject();
+        CycleStatus* cycle = new CycleStatus();
+        cycle->cycleNumber = jsonStep["cycleNumber"].toVariant().toULongLong();
+        cycle->currentPC = jsonStep["currentPC"].toVariant().toUInt();
+        cycle->nextPC = jsonStep["nextPC"].toVariant().toUInt();
+        cycle->instruction = Decoder::getInstructionDecoded(jsonStep["instruction"].toVariant().toUInt());
+        cycle->rf_readAddress1 = jsonStep["rf_readAddress1"].toVariant().toUInt();
+        cycle->rf_readAddress2 = jsonStep["rf_readAddress2"].toVariant().toUInt();
+        cycle->rf_writeAddress = jsonStep["rf_writeAddress"].toVariant().toUInt();
+        cycle->rf_dataIn = jsonStep["rf_dataIn"].toVariant().toUInt();
+        cycle->rf_dataOut1 = jsonStep["rf_dataOut1"].toVariant().toUInt();
+        cycle->rf_dataOut2 = jsonStep["rf_dataOut2"].toVariant().toUInt();
+        cycle->alu_op = jsonStep["aluOp"].toVariant().toUInt();
+        cycle->alu_in1 = jsonStep["aluIn1"].toVariant().toUInt();
+        cycle->alu_in2 = jsonStep["aluIn2"].toVariant().toUInt();
+        cycle->alu_zero = jsonStep["aluZero"].toBool();
+        cycle->dataOut = jsonStep["memDataOut"].toVariant().toUInt();
+        cycle->dvc = jsonStep["dvc"].toBool();
+        cycle->branch = jsonStep["branch"].toBool();
+        cycle->jr = jsonStep["jr"].toBool();
+        cycle->jal = jsonStep["jal"].toBool();
+        cycle->dvi = jsonStep["dvi"].toBool();
+        cycle->regDst = jsonStep["regDst"].toBool();
+        cycle->memRead = jsonStep["memRead"].toBool();
+        cycle->memToReg = jsonStep["memToReg"].toBool();
+        cycle->memWrite = jsonStep["memWrite"].toBool();
+        cycle->aluSrc = jsonStep["aluSrc"].toBool();
+        cycle->regWrite = jsonStep["regWrite"].toBool();
+        QJsonArray jsonRegFile = jsonStep["RegFile"].toArray();
+        for( int x = 0; x < jsonRegFile.size(); x++ ) {
+            QJsonObject jsonReg = jsonRegFile.at(x).toObject();
+            cycle->rf_registers[x] = jsonReg["value"].toVariant().toUInt();
+        }
+        QJsonArray jsonDataMem = jsonStep["DataMem"].toArray();
+        for( int x = 0; x < jsonDataMem.size(); x++ ) {
+            QJsonObject jsonData = jsonDataMem.at(x).toObject();
+            cycle->insert( jsonData["address"].toVariant().toUInt(), jsonData["value"].toVariant().toUInt() );
+        }
+        newSteps->push_back(cycle);
+    }
+    this->updateSteps(newSteps);
 }
