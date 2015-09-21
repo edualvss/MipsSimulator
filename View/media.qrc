@@ -7,5 +7,6 @@
         <file>icons/previous.png</file>
         <file>icons/simulate.png</file>
         <file>icons/time.png</file>
+        <file>icons/author.png</file>
     </qresource>
 </RCC>

@@ -1,6 +1,8 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
+#include "AboutWindow.h"
+
 #include "Model/Instruction.h"
 #include "Model/CycleStatus.h"
 #include "Model/Decoder.h"
@@ -34,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionNext_step, SIGNAL(triggered(bool)),this,SIGNAL(nextStep()));
     connect(ui->actionPrevious_Step,SIGNAL(triggered(bool)),this,SIGNAL(previousStep()));
     connect(ui->actionView_simulation_time,SIGNAL(triggered(bool)),this,SIGNAL(viewSimulationTime()));
+    connect(ui->actionAbout,SIGNAL(triggered(bool)),this,SLOT(showAbout()));
 
     QDockWidget* regFileDock = new QDockWidget(tr("Register File"),this);
     regFileDock->setObjectName("regFileDock");
@@ -434,4 +437,15 @@ void MainWindow::showMessageInStatusBar(QString msg, int timeout) {
     std::cout << "MainWindow::showMessageInStatusBar" << std::endl;
 #endif
     ui->statusbar->showMessage(msg,timeout);
+}
+
+void MainWindow::showAbout() {
+#ifdef DEBUG_METHODS
+    std::cout << "MainWindow::showAbout" << std::endl;
+#endif
+
+    AboutWindow about(this);
+
+    about.exec();
+
 }

@@ -41,6 +41,7 @@ signals:
 private slots:
     void openInstructionFile();
     void openDataFile();
+    void showAbout();
 
 private:
     Ui::MainWindow *ui;

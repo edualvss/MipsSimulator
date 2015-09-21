@@ -7,7 +7,8 @@ HEADERS += \
     Model/Instruction.h \
     Model/CycleStatus.h \
     Model/Decoder.h \
-    Model/RegisterFile.h
+    Model/RegisterFile.h \
+    View/AboutWindow.h
 
 SOURCES += main.cpp \
     View/MainWindow.cpp \
@@ -15,7 +16,8 @@ SOURCES += main.cpp \
     Model/Instruction.cpp \
     Model/CycleStatus.cpp \
     Model/Decoder.cpp \
-    Model/RegisterFile.cpp
+    Model/RegisterFile.cpp \
+    View/AboutWindow.cpp
 
 CONFIG -= debug_and_release
 
@@ -58,7 +60,8 @@ debug {
 }
 
 FORMS += \
-    View/MainWindow.ui
+    View/MainWindow.ui \
+    View/AboutWindow.ui
 
 RESOURCES += \
     View/media.qrc

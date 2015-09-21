@@ -1632,9 +1632,16 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
      <string>View</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSimulation_Control"/>
    <addaction name="menuView"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -1749,6 +1756,18 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
    </property>
    <property name="statusTip">
     <string>View simulation time</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="media.qrc">
+     <normaloff>:/icons/app_icon.png</normaloff>:/icons/app_icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>About</string>
+   </property>
+   <property name="statusTip">
+    <string>Show about</string>
    </property>
   </action>
  </widget>
