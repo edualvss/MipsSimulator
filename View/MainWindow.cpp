@@ -206,13 +206,30 @@ void MainWindow::updateStatus(CycleStatus *cycleInfo) {
     ui->tableInstructionMemory->selectRow(row);
 
     // Update register file
+    this->updateRegisterFile(cycleInfo->rf_registers);
+
+    // Update PC
+    ui->tableRegFile->item(32,2)->setText( QString("0x%1").arg(cycleInfo->currentPC,8,16,QLatin1Char('0')) );
+
+    // Update Data Memory
+    this->updateDataTable(&cycleInfo->dataMemory);
+
+    // Update instruction format
+    this->updateInstructionFormat(cycleInfo->instruction);
+
+}
+
+void MainWindow::updateRegisterFile(unsigned int registers[32]) {
+#ifdef DEBUG_METHODS
+    std::cout << "MainWindow::updateRegisterFile" << std::endl;
+#endif
     for( unsigned int i = 0; i < 32; i++ ) {
         QTableWidgetItem* regItem = ui->tableRegFile->item(i,2);
         QString currentText = regItem->text();
-        QString newText = QString("0x%1").arg(cycleInfo->rf_registers[i],8,16,QLatin1Char('0'));
+        QString newText = QString("0x%1").arg(registers[i],8,16,QLatin1Char('0'));
         QString tipValue = tr("Value: %1, 0b%2")
-                .arg( cycleInfo->rf_registers[i] )
-                .arg( cycleInfo->rf_registers[i] ,32,2,QLatin1Char('0'));
+                .arg( registers[i] )
+                .arg( registers[i] ,32,2,QLatin1Char('0'));
         regItem->setText( newText );
         regItem->setStatusTip( tipValue );
         regItem->setToolTip( tipValue );
@@ -221,14 +238,18 @@ void MainWindow::updateStatus(CycleStatus *cycleInfo) {
             ui->statusbar->showMessage(tr("Register: %1 updated").arg(QString::fromStdString(RegisterFile::REG_NAMES[i])),2000);
         }
     }
-    // Update PC
-    ui->tableRegFile->item(32,2)->setText( QString("0x%1").arg(cycleInfo->currentPC,8,16,QLatin1Char('0')) );
 
-    // Update Data Memory
+}
+
+void MainWindow::updateDataTable(std::map<unsigned int, unsigned int> *dataMem) {
+#ifdef DEBUG_METHODS
+    std::cout << "MainWindow::updateDataTable" << std::endl;
+#endif
+
     if( ui->tableDataMemory->rowCount() > 0 ) {
         std::map<unsigned int, unsigned int>::iterator it;
         unsigned int i = 0;
-        for( it = cycleInfo->dataMemory.begin(); it != cycleInfo->dataMemory.end(); it++, i++ ) {
+        for( it = dataMem->begin(); it != dataMem->end(); it++, i++ ) {
             QTableWidgetItem* memItem = ui->tableDataMemory->item(i,1);
             QString currentText = memItem->text();
             QString newText = QString("0x%1").arg(it->second,8,16,QLatin1Char('0'));
@@ -240,10 +261,6 @@ void MainWindow::updateStatus(CycleStatus *cycleInfo) {
             }
         }
     }
-
-    // Update instruction format
-    this->updateInstructionFormat(cycleInfo->instruction);
-
 }
 
 void MainWindow::updateInstructionFormat(Instruction *ins) {
@@ -253,169 +270,192 @@ void MainWindow::updateInstructionFormat(Instruction *ins) {
     switch(ins->getFormat()) {
         case Instruction::R: {
             // Activate row of R-format
-            ui->l_r_FUNCTION->setVisible(true);
-            ui->l_r_OP->setVisible(true);
-            ui->l_r_RD->setVisible(true);
-            ui->l_r_RS->setVisible(true);
-            ui->l_r_RT->setVisible(true);
-            ui->l_r_SHAMT->setVisible(true);
-            ui->l_R_comment->setVisible(true);
-            ui->l_R_format->setVisible(true);
+            this->setEnabledRFormatView(true);
             // Deactivate row of I-format
-            ui->l_i_ADDRESS_IMMEDIATE->setVisible(false);
-            ui->l_i_comment->setVisible(false);
-            ui->l_i_format->setVisible(false);
-            ui->l_i_OP->setVisible(false);
-            ui->l_i_RS->setVisible(false);
-            ui->l_i_RT->setVisible(false);
+            this->setEnabledIFormatView(false);
             // Deactivate row of J-format
-            ui->l_j_comment->setVisible(false);
-            ui->l_j_format->setVisible(false);
-            ui->l_j_OP->setVisible(false);
-            ui->l_j_TARGETADDRESS->setVisible(false);
+            this->setEnabledJFormatView(false);
 
-            // Setting value in binary
-            ui->l_r_FUNCTION->setText(QString("%1").arg(ins->getFunction(),6,2,QLatin1Char('0')));
-            ui->l_r_OP->setText(QString("%1").arg(ins->getOp(),6,2,QLatin1Char('0')));
-            ui->l_r_RD->setText(QString("%1").arg(ins->getRd(),5,2,QLatin1Char('0')));
-            ui->l_r_RS->setText(QString("%1").arg(ins->getRs(),5,2,QLatin1Char('0')));
-            ui->l_r_RT->setText(QString("%1").arg(ins->getRt(),5,2,QLatin1Char('0')));
-            ui->l_r_SHAMT->setText(QString("%1").arg(ins->getShamt(),5,2,QLatin1Char('0')));
-
-            // Setting tip (values in other base)
-            QString tipFunction = tr("Value: %1, 0x%2")
-                    .arg(ins->getFunction())
-                    .arg(ins->getFunction(),2,16,QLatin1Char('0'));
-            QString tipOp = tr("Value: %1, 0x%2")
-                    .arg(ins->getOp())
-                    .arg(ins->getOp(),2,16,QLatin1Char('0'));
-            QString tipRd = tr("Value: %1, 0x%2")
-                    .arg(ins->getRd())
-                    .arg(ins->getRd(),2,16,QLatin1Char('0'));
-            QString tipRs = tr("Value: %1, 0x%2")
-                    .arg(ins->getRs())
-                    .arg(ins->getRs(),2,16,QLatin1Char('0'));
-            QString tipRt = tr("Value: %1, 0x%2")
-                    .arg(ins->getRt())
-                    .arg(ins->getRt(),2,16,QLatin1Char('0'));
-            QString tipShamt = tr("Value: %1, 0x%2")
-                    .arg(ins->getShamt())
-                    .arg(ins->getShamt(),2,16,QLatin1Char('0'));
-
-            ui->l_r_FUNCTION->setStatusTip(tipFunction);
-            ui->l_r_OP->setStatusTip(tipOp);
-            ui->l_r_RD->setStatusTip(tipRd);
-            ui->l_r_RS->setStatusTip(tipRs);
-            ui->l_r_RT->setStatusTip(tipRt);
-            ui->l_r_SHAMT->setStatusTip(tipShamt);
-
-            ui->l_r_FUNCTION->setToolTip(tipFunction);
-            ui->l_r_OP->setToolTip(tipOp);
-            ui->l_r_RD->setToolTip(tipRd);
-            ui->l_r_RS->setToolTip(tipRs);
-            ui->l_r_RT->setToolTip(tipRt);
-            ui->l_r_SHAMT->setToolTip(tipShamt);
-
+            // Update R format
+            this->updateInstructionRFormat(ins->getOp(),ins->getRs(),ins->getRt(),
+                                           ins->getRd(),ins->getShamt(),ins->getFunction());
             break;
         }
         case Instruction::I: {
             // Deactivate row of R-format
-            ui->l_r_FUNCTION->setVisible(false);
-            ui->l_r_OP->setVisible(false);
-            ui->l_r_RD->setVisible(false);
-            ui->l_r_RS->setVisible(false);
-            ui->l_r_RT->setVisible(false);
-            ui->l_r_SHAMT->setVisible(false);
-            ui->l_R_comment->setVisible(false);
-            ui->l_R_format->setVisible(false);
+            this->setEnabledRFormatView(false);
             // Activate row of I-format
-            ui->l_i_ADDRESS_IMMEDIATE->setVisible(true);
-            ui->l_i_comment->setVisible(true);
-            ui->l_i_format->setVisible(true);
-            ui->l_i_OP->setVisible(true);
-            ui->l_i_RS->setVisible(true);
-            ui->l_i_RT->setVisible(true);
+            this->setEnabledIFormatView(true);
             // Deactivate row of J-format
-            ui->l_j_comment->setVisible(false);
-            ui->l_j_format->setVisible(false);
-            ui->l_j_OP->setVisible(false);
-            ui->l_j_TARGETADDRESS->setVisible(false);
+            this->setEnabledJFormatView(false);
 
-            // Setting value in binary
-            ui->l_i_OP->setText(QString("%1").arg(ins->getOp(),6,2,QLatin1Char('0')));
-            ui->l_i_ADDRESS_IMMEDIATE->setText(QString("%1").arg(ins->getImed16(),16,2,QLatin1Char('0')));
-            ui->l_i_RS->setText(QString("%1").arg(ins->getRs(),5,2,QLatin1Char('0')));
-            ui->l_i_RT->setText(QString("%1").arg(ins->getRt(),5,2,QLatin1Char('0')));
-
-            // Setting tip (values in other base)
-            QString tipOp = tr("Value: %1, 0x%2")
-                    .arg(ins->getOp())
-                    .arg(ins->getOp(),2,16,QLatin1Char('0'));
-            QString tipRs = tr("Value: %1, 0x%2")
-                    .arg(ins->getRs())
-                    .arg(ins->getRs(),2,16,QLatin1Char('0'));
-            QString tipRt = tr("Value: %1, 0x%2")
-                    .arg(ins->getRt())
-                    .arg(ins->getRt(),2,16,QLatin1Char('0'));
-            QString tipImed16 = tr("Value: %1, 0x%2")
-                    .arg(ins->getImed16())
-                    .arg(ins->getImed16(),4,16,QLatin1Char('0'));
-
-            ui->l_i_ADDRESS_IMMEDIATE->setStatusTip(tipImed16);
-            ui->l_i_OP->setStatusTip(tipOp);
-            ui->l_i_RS->setStatusTip(tipRs);
-            ui->l_i_RT->setStatusTip(tipRt);
-
-            ui->l_i_ADDRESS_IMMEDIATE->setToolTip(tipImed16);
-            ui->l_i_OP->setToolTip(tipOp);
-            ui->l_i_RS->setToolTip(tipRs);
-            ui->l_i_RT->setToolTip(tipRt);
+            // Update I format
+            this->updateInstructionIFormat(ins->getOp(),ins->getRs(),ins->getRt(),ins->getImed16());
 
             break;
         }
         case Instruction::J: {
             // Deactivate row of R-format
-            ui->l_r_FUNCTION->setVisible(false);
-            ui->l_r_OP->setVisible(false);
-            ui->l_r_RD->setVisible(false);
-            ui->l_r_RS->setVisible(false);
-            ui->l_r_RT->setVisible(false);
-            ui->l_r_SHAMT->setVisible(false);
-            ui->l_R_comment->setVisible(false);
-            ui->l_R_format->setVisible(false);
+            this->setEnabledRFormatView(false);
             // Deactivate row of I-format
-            ui->l_i_ADDRESS_IMMEDIATE->setVisible(false);
-            ui->l_i_comment->setVisible(false);
-            ui->l_i_format->setVisible(false);
-            ui->l_i_OP->setVisible(false);
-            ui->l_i_RS->setVisible(false);
-            ui->l_i_RT->setVisible(false);
+            this->setEnabledIFormatView(false);
             // Activate row of J-format
-            ui->l_j_comment->setVisible(true);
-            ui->l_j_format->setVisible(true);
-            ui->l_j_OP->setVisible(true);
-            ui->l_j_TARGETADDRESS->setVisible(true);
+            this->setEnabledJFormatView(true);
 
-            // Setting value in binary
-            ui->l_j_OP->setText(QString("%1").arg(ins->getOp(),6,2,QLatin1Char('0')));
-            ui->l_j_TARGETADDRESS->setText(QString("%1").arg(ins->getImed26(),26,2,QLatin1Char('0')));
-
-            // Setting tip (values in other base)
-            QString tipOp = tr("Value: %1, 0x%2")
-                    .arg(ins->getOp())
-                    .arg(ins->getOp(),2,16,QLatin1Char('0'));
-            QString tipImed26 = tr("Value: %1, 0x%2")
-                    .arg(ins->getImed26())
-                    .arg(ins->getImed26(),7,16,QLatin1Char('0'));
-            ui->l_j_OP->setStatusTip(tipOp);
-            ui->l_j_TARGETADDRESS->setStatusTip(tipImed26);
-
-            ui->l_j_OP->setToolTip(tipOp);
-            ui->l_j_TARGETADDRESS->setToolTip(tipImed26);
-
+            // Update J format
+            this->updateInstructionJFormat(ins->getOp(),ins->getImed26());
             break;
         }
     }
+}
+
+void MainWindow::updateInstructionRFormat(unsigned int op, unsigned int rs,
+                                          unsigned int rt, unsigned rd,
+                                          unsigned int shamt, unsigned int function) {
+#ifdef DEBUG_METHODS
+    std::cout << "MainWindow::updateInstructionRFormat" << std::endl;
+#endif
+    // Setting value in binary
+    ui->l_r_OP->setText(QString("%1").arg(op,6,2,QLatin1Char('0')));
+    ui->l_r_RS->setText(QString("%1").arg(rs,5,2,QLatin1Char('0')));
+    ui->l_r_RT->setText(QString("%1").arg(rt,5,2,QLatin1Char('0')));
+    ui->l_r_RD->setText(QString("%1").arg(rd,5,2,QLatin1Char('0')));
+    ui->l_r_SHAMT->setText(QString("%1").arg(shamt,5,2,QLatin1Char('0')));
+    ui->l_r_FUNCTION->setText(QString("%1").arg(function,6,2,QLatin1Char('0')));
+
+    // Setting tip (values in other base)
+    QString tipOp = tr("Value: %1, 0x%2")
+            .arg(op)
+            .arg(op,2,16,QLatin1Char('0'));
+    QString tipRs = tr("Value: %1, 0x%2")
+            .arg(rs)
+            .arg(rs,2,16,QLatin1Char('0'));
+    QString tipRt = tr("Value: %1, 0x%2")
+            .arg(rt)
+            .arg(rt,2,16,QLatin1Char('0'));
+    QString tipRd = tr("Value: %1, 0x%2")
+            .arg(rd)
+            .arg(rd,2,16,QLatin1Char('0'));
+    QString tipShamt = tr("Value: %1, 0x%2")
+            .arg(shamt)
+            .arg(shamt,2,16,QLatin1Char('0'));
+    QString tipFunction = tr("Value: %1, 0x%2")
+            .arg(function)
+            .arg(function,2,16,QLatin1Char('0'));
+
+    ui->l_r_OP->setStatusTip(tipOp);
+    ui->l_r_RS->setStatusTip(tipRs);
+    ui->l_r_RT->setStatusTip(tipRt);
+    ui->l_r_RD->setStatusTip(tipRd);
+    ui->l_r_SHAMT->setStatusTip(tipShamt);
+    ui->l_r_FUNCTION->setStatusTip(tipFunction);
+
+    ui->l_r_OP->setToolTip(tipOp);
+    ui->l_r_RS->setToolTip(tipRs);
+    ui->l_r_RT->setToolTip(tipRt);
+    ui->l_r_RD->setToolTip(tipRd);
+    ui->l_r_SHAMT->setToolTip(tipShamt);
+    ui->l_r_FUNCTION->setToolTip(tipFunction);
+}
+
+void MainWindow::updateInstructionIFormat(unsigned int op, unsigned int rs,
+                                          unsigned int rt, unsigned int imed16) {
+#ifdef DEBUG_METHODS
+    std::cout << "MainWindow::updateInstructionIFormat" << std::endl;
+#endif
+
+    // Setting value in binary
+    ui->l_i_OP->setText(QString("%1").arg(op,6,2,QLatin1Char('0')));
+    ui->l_i_RS->setText(QString("%1").arg(rs,5,2,QLatin1Char('0')));
+    ui->l_i_RT->setText(QString("%1").arg(rt,5,2,QLatin1Char('0')));
+    ui->l_i_ADDRESS_IMMEDIATE->setText(QString("%1").arg(imed16,16,2,QLatin1Char('0')));
+
+    // Setting tip (values in other base)
+    QString tipOp = tr("Value: %1, 0x%2")
+            .arg(op)
+            .arg(op,2,16,QLatin1Char('0'));
+    QString tipRs = tr("Value: %1, 0x%2")
+            .arg(rs)
+            .arg(rs,2,16,QLatin1Char('0'));
+    QString tipRt = tr("Value: %1, 0x%2")
+            .arg(rt)
+            .arg(rt,2,16,QLatin1Char('0'));
+    QString tipImed16 = tr("Value: %1, 0x%2")
+            .arg(imed16)
+            .arg(imed16,4,16,QLatin1Char('0'));
+
+    ui->l_i_OP->setStatusTip(tipOp);
+    ui->l_i_RS->setStatusTip(tipRs);
+    ui->l_i_RT->setStatusTip(tipRt);
+    ui->l_i_ADDRESS_IMMEDIATE->setStatusTip(tipImed16);
+
+    ui->l_i_OP->setToolTip(tipOp);
+    ui->l_i_RS->setToolTip(tipRs);
+    ui->l_i_RT->setToolTip(tipRt);
+    ui->l_i_ADDRESS_IMMEDIATE->setToolTip(tipImed16);
+
+}
+
+void MainWindow::updateInstructionJFormat(unsigned int op, unsigned int imed26) {
+#ifdef DEBUG_METHODS
+    std::cout << "MainWindow::updateInstructionJFormat" << std::endl;
+#endif
+    // Setting value in binary
+    ui->l_j_OP->setText(QString("%1").arg(op,6,2,QLatin1Char('0')));
+    ui->l_j_TARGETADDRESS->setText(QString("%1").arg(imed26,26,2,QLatin1Char('0')));
+
+    // Setting tip (values in other base)
+    QString tipOp = tr("Value: %1, 0x%2")
+            .arg(op)
+            .arg(op,2,16,QLatin1Char('0'));
+    QString tipImed26 = tr("Value: %1, 0x%2")
+            .arg(imed26)
+            .arg(imed26,7,16,QLatin1Char('0'));
+    ui->l_j_OP->setStatusTip(tipOp);
+    ui->l_j_TARGETADDRESS->setStatusTip(tipImed26);
+
+    ui->l_j_OP->setToolTip(tipOp);
+    ui->l_j_TARGETADDRESS->setToolTip(tipImed26);
+
+}
+
+void MainWindow::setEnabledRFormatView(bool enabled) {
+#ifdef DEBUG_METHODS
+    std::cout << "MainWindow::setEnabledRFormatView" << std::endl;
+#endif
+    ui->l_r_FUNCTION->setVisible(enabled);
+    ui->l_r_OP->setVisible(enabled);
+    ui->l_r_RD->setVisible(enabled);
+    ui->l_r_RS->setVisible(enabled);
+    ui->l_r_RT->setVisible(enabled);
+    ui->l_r_SHAMT->setVisible(enabled);
+    ui->l_R_comment->setVisible(enabled);
+    ui->l_R_format->setVisible(enabled);
+
+}
+
+void MainWindow::setEnabledIFormatView(bool enabled) {
+#ifdef DEBUG_METHODS
+    std::cout << "MainWindow::setEnabledIFormatView" << std::endl;
+#endif
+    ui->l_i_ADDRESS_IMMEDIATE->setVisible(enabled);
+    ui->l_i_comment->setVisible(enabled);
+    ui->l_i_format->setVisible(enabled);
+    ui->l_i_OP->setVisible(enabled);
+    ui->l_i_RS->setVisible(enabled);
+    ui->l_i_RT->setVisible(enabled);
+
+}
+
+void MainWindow::setEnabledJFormatView(bool enabled) {
+#ifdef DEBUG_METHODS
+    std::cout << "MainWindow::setEnabledJFormatView" << std::endl;
+#endif
+    ui->l_j_comment->setVisible(enabled);
+    ui->l_j_format->setVisible(enabled);
+    ui->l_j_OP->setVisible(enabled);
+    ui->l_j_TARGETADDRESS->setVisible(enabled);
+
 }
 
 void MainWindow::setEnabledSimulate(bool enabled) {

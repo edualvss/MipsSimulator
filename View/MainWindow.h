@@ -47,8 +47,24 @@ private:
     Ui::MainWindow *ui;
     QString getFile(QString title);
     void clearTable(QTableWidget*);
+
+    // To update status
     int rowOfPC(unsigned int pc);
     void updateInstructionFormat(Instruction* ins);
+    void updateDataTable(std::map<unsigned int,unsigned int>* dataMem);
+    void updateRegisterFile(unsigned int registers[32]);
+
+    // Auxiliar methods to update view of instruction format
+    void updateInstructionRFormat(unsigned int op,unsigned int rs,
+                                  unsigned int rt, unsigned rd,
+                                  unsigned int shamt,unsigned int function);
+    void updateInstructionIFormat(unsigned int op, unsigned int rs,
+                                  unsigned int rt, unsigned int imed16);
+    void updateInstructionJFormat(unsigned int op, unsigned int imed26);
+    void setEnabledRFormatView(bool);
+    void setEnabledIFormatView(bool);
+    void setEnabledJFormatView(bool);
+
 };
 
 #endif // MAINWINDOW_H

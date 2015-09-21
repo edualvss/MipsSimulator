@@ -64,15 +64,6 @@ Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
      *  % Not implemented
      */
 
-//    unsigned int op = v_INS(31,26);
-//    unsigned int rs = v_INS(25,21);
-//    unsigned int rt = v_INS(20,16);
-//    unsigned int rd = v_INS(15,11);
-//    unsigned int shamt = v_INS(10,6);
-//    unsigned int function = v_INS(5,0);
-//    unsigned int imed26 = v_INS(25,0);
-//    unsigned int imed16 = v_INS(15,0);
-
     unsigned int op =  (instruction >> 26) & 0b111111;
     unsigned int rs = (instruction >> 21) & 0b11111;
     unsigned int rt = (instruction >> 16) & 0b11111;
@@ -160,7 +151,7 @@ Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
                     ins->setInstructionMnemonic("nor");
                     break;
                 }
-                case 0b101010: {
+                case 0b101010: { // slt
                     ins->setInstructionMnemonic("slt");
                     break;
                 }

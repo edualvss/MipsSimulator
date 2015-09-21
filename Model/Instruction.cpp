@@ -82,41 +82,6 @@ void Instruction::debug() {
     std::cout << "Instruction::debug" << std::endl;
 #endif
 
-    std::string str;
-    std::stringstream ss;
-
-    ss << "0x" << std::uppercase << std::hex;
-
-    switch( this->format ) {
-        case R:
-            str = insMnemonic + "\t" + rdRegName + ", " + rsRegName + ", " + rtRegName;
-            if( (insMnemonic.compare("sll") == 0) || (insMnemonic.compare("srl") == 0) ) {
-                ss << _shamt;
-                str = insMnemonic + "\t" + rdRegName + ", " + rsRegName + ", " + ss.str();
-            } else {
-                if( insMnemonic.compare("jr") == 0 ) {
-                    str = insMnemonic + "\t" + rsRegName;
-                } else if(insMnemonic.compare("syscall") == 0) {
-                    str = "syscall";
-                }
-            }
-            break;
-        case I:
-            if( (insMnemonic.compare("lw") == 0) || (insMnemonic.compare("sw") == 0) ) {
-                ss << _imed16;
-                str = insMnemonic + "\t" + rtRegName + ", " + ss.str() + "(" + rsRegName + ")";
-            } else {
-                ss << _imed16;
-                str = insMnemonic + "\t" + rtRegName + ", " + rsRegName + "," + ss.str();
-            }
-            break;
-        case J:
-            ss << _imed26;
-            str = insMnemonic + "\t" + ss.str();
-
-            break;
-    }
-
-    std::cout << "\nInstruction is: " << str << std::endl;
+    std::cout << "\nInstruction is: " << getFormatedInstruction() << std::endl;
 
 }
