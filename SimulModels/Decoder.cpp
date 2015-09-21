@@ -8,7 +8,7 @@ FILE   : Decoder.cpp
 #include "Decoder.h"
 #include "RegisterFile.h"
 
-#include "Instruction.h"
+#include "Model/Instruction.h"
 
 Decoder::Decoder(sc_module_name mn) : sc_module(mn) {
 #ifdef DEBUG_METHODS
@@ -85,7 +85,7 @@ Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
      *   001100  | syscall     | % Issue a system call (not implemented)
      *   001101  | break       | % Break execution Terminate program execution with exception (not implemented)
      *   100000  | add         | Addition with overflow
-     *   100011  | sub         | Subtraction with overflow
+     *   100010  | sub         | Subtraction with overflow
      *   100100  | and         | Bitwise AND
      *   100101  | or          | Bitwise OR
      *   100110  | xor         | Bitwise XOR
@@ -126,6 +126,11 @@ Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
     ins->setAddressingMode(Instruction::Immediate);
     ins->setAddressingModeName(Instruction::ADDRESSING_MODE_NAME[Instruction::Immediate]);
 
+    if( instruction == 0 ) {
+        ins->setInstructionMnemonic("nop");
+        return ins;
+    }
+
     switch(op) { // Decode general instructions
         case 0b000000: { // R-format
             ins->setFormat( Instruction::R );
@@ -157,7 +162,7 @@ Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
                     ins->setInstructionMnemonic("add");
                     break;
                 }
-                case 0b100011: { // sub
+                case 0b100010: { // sub
                     ins->setInstructionMnemonic("sub");
                     break;
                 }
@@ -175,6 +180,10 @@ Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
                 }
                 case 0b100111: { // nor
                     ins->setInstructionMnemonic("nor");
+                    break;
+                }
+                case 0b101010: {
+                    ins->setInstructionMnemonic("slt");
                     break;
                 }
                 default: { // R-format instructions not implemented

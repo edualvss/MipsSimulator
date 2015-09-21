@@ -22,9 +22,7 @@ using namespace sc_dt;
 
 class InstructionMemory : public sc_module {
 private:
-    // Internal memory
     std::vector<sc_uint<32> > m_MEMORY;      // Memory
-
 public:
 
     // Interface

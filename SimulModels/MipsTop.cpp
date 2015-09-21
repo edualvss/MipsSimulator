@@ -4,14 +4,14 @@
 #include "Control.h"
 #include "DataMemory.h"
 #include "Decoder.h"
-#include "Instruction.h"
 #include "InstructionMemory.h"
 #include "Mux2x1.h"
 #include "PC_Control.h"
 #include "ProgramCounter.h"
 #include "RegisterFile.h"
+#include "SystemMonitor.h"
 
-Mips::Mips(sc_module_name mn) : sc_module(mn) {
+Mips::Mips(sc_module_name mn,char* destLocation) : sc_module(mn) {
 #ifdef DEBUG_METHODS
     std::cout << "Constructor MIPS" << std::endl;
 #endif
@@ -123,7 +123,6 @@ Mips::Mips(sc_module_name mn) : sc_module(mn) {
 
     ///////// Data Memory /////////
     c_DataMemory = new DataMemory("DataMemory");
-    c_DataMemory->debug();
     c_DataMemory->i_CLK(i_CLK);
     c_DataMemory->i_ADDRESS(w_ALU_OUT);
     c_DataMemory->i_DATA_IN(w_DATA_OUT_B_REG_FILE);
@@ -150,8 +149,42 @@ Mips::Mips(sc_module_name mn) : sc_module(mn) {
     c_PC_Control->o_PC_PLUS4(w_PC_PLUS4);
     c_PC_Control->o_NEXT_PC(w_PC_IN);
 
+    ///////////////// Monitor //////////////////
+    /// Save the system status in each cycle ///
+    /// ////////////////////////////////////////
+    c_systemMonitor = new SystemMonitor("Monitor",c_RegFile,c_DataMemory,&clockCount);
+    c_systemMonitor->i_CLK(i_CLK);
+    c_systemMonitor->i_ALU_SRC(w_ALU_SRC);
+    c_systemMonitor->i_BRANCH(w_BRANCH_RESULT);
+    c_systemMonitor->i_CURRENT_PC(w_PC_OUT);
+    c_systemMonitor->i_DVC(w_BRANCH);
+    c_systemMonitor->i_DVI(w_JUMP);
+    c_systemMonitor->i_INSTRUCTION(w_INSTRUCTION);
+    c_systemMonitor->i_JAL(w_JAL);
+    c_systemMonitor->i_JR(w_JR);
+    c_systemMonitor->i_MEM_RD(w_MEM_READ);
+    c_systemMonitor->i_MEM_TO_REG(w_MEM_TO_REG);
+    c_systemMonitor->i_MEM_WR(w_MEM_WRITE);
+    c_systemMonitor->i_NEXT_PC(w_PC_IN);
+    c_systemMonitor->i_REG_DST(w_REG_DST);
+    c_systemMonitor->i_REG_WRITE(w_REG_WRITE);
+    c_systemMonitor->i_rf_DATA_IN(w_DATA_IN_REG_FILE);
+    c_systemMonitor->i_rf_DATA_OUT_0(w_DATA_OUT_A_REG_FILE);
+    c_systemMonitor->i_rf_DATA_OUT_1(w_DATA_OUT_B_REG_FILE);
+    c_systemMonitor->i_rf_RD_ADDRESS_0(w_RS);
+    c_systemMonitor->i_rf_RD_ADDRESS_1(w_RT);
+    c_systemMonitor->i_rf_WR_ADDRESS(w_WR_ADDRESS_REG_FILE);
+    c_systemMonitor->i_ula_IN_0(w_DATA_OUT_A_REG_FILE);
+    c_systemMonitor->i_ula_IN_1(w_ALU_B_INPUT);
+    c_systemMonitor->i_ula_OP(w_ALU_OP);
+    c_systemMonitor->i_ula_OUT(w_ALU_OUT);
+    c_systemMonitor->i_ula_ZERO(w_ALU_ZERO);
+
+    char tmpBuff[512];
+    sprintf(tmpBuff,"%s/waves",destLocation);
+    std::cout << "\nWaves: " << tmpBuff << std::endl;
     // Signal tracing
-    sc_trace_file *tf = sc_create_vcd_trace_file("waves");
+    sc_trace_file *tf = sc_create_vcd_trace_file(tmpBuff);
     sc_trace(tf,i_CLK,"CLK");
     sc_trace(tf,clockCount,"CLK_Count");
     sc_trace(tf,i_RST,"RST");
@@ -208,7 +241,7 @@ void Mips::p_signExtend() {
     sc_uint<32> v_SIGN_EXTENDED = 0;
     v_SIGN_EXTENDED.range(15,0) = w_IMED16.read();
 
-    if( v_SIGN_EXTENDED[5] == 1 ) {
+    if( v_SIGN_EXTENDED[15] == 1 ) {
         v_SIGN_EXTENDED(31,16) = 0xFFFF;
     }
 
@@ -241,13 +274,11 @@ void Mips::p_branch() {
     w_BRANCH_RESULT.write( result );
 }
 
-
 Mips::~Mips() {
 #ifdef DEBUG_METHODS
     std::cout << "Destructor Mips" << std::endl;
 #endif
 
-    sc_close_vcd_trace_file(tf);
     delete c_PC;
     delete c_PC_Control;
     delete c_InstructionMemory;
@@ -260,4 +291,6 @@ Mips::~Mips() {
     delete c_MuxWriteBack;
     delete c_MuxJalAddressRegFile;
     delete c_MuxJalDataRegFile;
+    delete c_systemMonitor;
+
 }

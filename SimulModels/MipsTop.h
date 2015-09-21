@@ -31,6 +31,7 @@ class DataMemory;
 class PC_Control;
 class Mux2x1_32bit;
 class Mux2x1_5bit;
+class SystemMonitor;
 
 class Mips : public sc_module {
 public:
@@ -51,6 +52,7 @@ public:
     Mux2x1_32bit* c_MuxInputAluB;
     Mux2x1_32bit* c_MuxWriteBack;
     Mux2x1_32bit* c_MuxJalDataRegFile;
+    SystemMonitor* c_systemMonitor;
 
     // Internal wires
     // PC_Control -> PC -> Instruction Memory  //
@@ -108,7 +110,7 @@ public:
     void p_updateClockCount();
 
     SC_HAS_PROCESS(Mips);
-    Mips(sc_module_name moduleName);
+    Mips(sc_module_name moduleName, char *destLocation);
     virtual ~Mips();
 
 };
