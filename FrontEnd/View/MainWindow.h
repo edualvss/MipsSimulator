@@ -29,7 +29,7 @@ public:
 
     void setEnabledSimulate(bool enabled);
     void setEnabledSimulationTime(bool enabled);
-
+    void resetRegisterFileTable();
 signals:
     void sendInstructionFile(QString);
     void sendDataFile(QString);

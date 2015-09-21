@@ -94,6 +94,7 @@ void AppControl::endSimulation() {
 
     this->loadStepsInCSV();
 
+    this->mainWindow->resetRegisterFileTable();
     QApplication::restoreOverrideCursor();
     mipsProcess->deleteLater();
     this->mainWindow->showMessage( tr("Simulated in: %1 s and %2 us")

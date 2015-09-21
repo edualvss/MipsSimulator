@@ -74,6 +74,19 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     event->accept();
 }
 
+void MainWindow::resetRegisterFileTable() {
+#ifdef DEBUG_METHODS
+    std::cout << "MainWindow::resetRegisterFileTable" << std::endl;
+#endif
+    for( int i = 0; i < ui->tableRegFile->rowCount(); i++ ) {
+        ui->tableRegFile->item(i,2)->setText( QString("0x00000000") );
+    }
+    ui->tableRegFile->item(28,2)->setText( QString("0x10008000") ); // $gp
+    ui->tableRegFile->item(29,2)->setText( QString("0x7fffeffc") ); // $sp
+    ui->tableRegFile->item(32,2)->setText( QString("0x00400000") ); // pc
+
+}
+
 void MainWindow::openInstructionFile() {
 #ifdef DEBUG_METHODS
     std::cout << "MainWindow::openInstructionFile" << std::endl;
