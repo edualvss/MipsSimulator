@@ -38,14 +38,15 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionView_simulation_time,SIGNAL(triggered(bool)),this,SIGNAL(viewSimulationTime()));
     connect(ui->actionAbout,SIGNAL(triggered(bool)),this,SLOT(showAbout()));
 
-    QDockWidget* regFileDock = new QDockWidget(tr("Register File"),this);
-    regFileDock->setObjectName("regFileDock");
-    regFileDock->setWidget(ui->groupRegFile);
-    addDockWidget(Qt::RightDockWidgetArea,regFileDock);
+
     QDockWidget* dataMemoryDock = new QDockWidget(tr("Data Memory"),this);
     dataMemoryDock->setObjectName("dataMemoryDock");
     dataMemoryDock->setWidget(ui->groupDataMemory);
     addDockWidget(Qt::LeftDockWidgetArea,dataMemoryDock);
+    QDockWidget* regFileDock = new QDockWidget(tr("Register File"),this);
+    regFileDock->setObjectName("regFileDock");
+    regFileDock->setWidget(ui->groupRegFile);
+    addDockWidget(Qt::RightDockWidgetArea,regFileDock);
 
     QSettings windowSettings;
     this->restoreGeometry(windowSettings.value("mainWindowGeometry").toByteArray());
@@ -142,7 +143,9 @@ void MainWindow::clearTable(QTableWidget *tw) {
     for( int i = 0; i < rowCount; i++ ) {
         for( int x = 0; x < columnCount; x++ ) {
             QWidget* wid = tw->cellWidget(i,x);
+            QTableWidgetItem* item = tw->item(i,x);
             delete wid;
+            delete item;
         }
     }
 }
@@ -259,19 +262,40 @@ void MainWindow::updateDataTable(std::map<unsigned int, unsigned int> *dataMem) 
     std::cout << "MainWindow::updateDataTable" << std::endl;
 #endif
 
-    if( ui->tableDataMemory->rowCount() > 0 ) {
-        std::map<unsigned int, unsigned int>::iterator it;
-        unsigned int i = 0;
-        for( it = dataMem->begin(); it != dataMem->end(); it++, i++ ) {
-            QTableWidgetItem* memItem = ui->tableDataMemory->item(i,1);
-            QString currentText = memItem->text();
-            QString newText = QString("0x%1").arg(it->second,8,16,QLatin1Char('0'));
-            memItem->setText( newText );
-            if( newText != currentText ) {
-                ui->tableDataMemory->selectRow(i);
+    std::map<unsigned int, unsigned int>::iterator it;
+    for( it = dataMem->begin(); it != dataMem->end(); it++ ) {
+        unsigned int address = it->first;
+        unsigned int value = it->first;
+        QString search = QString("0x%1").arg(address,8,16,QLatin1Char('0'));
+        QList<QTableWidgetItem*> items = ui->tableDataMemory->findItems(search,Qt::MatchFixedString);
+        if( items.size() > 0 ) { // If item already exists
+            int line = items.at(0)->row();
+            QTableWidgetItem* memDataItem = ui->tableDataMemory->item(line,1);
+            QString currentText = memDataItem->text();
+            QString newDataText = QString("0x%1").arg(it->second,8,16,QLatin1Char('0'));
+            memDataItem->setText( newDataText );
+            if( newDataText != currentText ) {
+                ui->tableDataMemory->selectRow(line);
                 ui->statusbar->showMessage(tr("Data memory in address: %1 updated")
-                                           .arg(QString("0x%1").arg(it->first,8,16,QLatin1Char('0'))),2000);
+                                           .arg(QString("0x%1").arg(value,8,16,QLatin1Char('0'))),2000);
             }
+        } else { // If item do not exists, so create it
+            QTableWidgetItem* itAddress = new QTableWidgetItem( QString("0x%1").arg(address,8,16,QLatin1Char('0')) );
+            QString tipAddress = tr("Value: %1, 0b%2")
+                    .arg( address )
+                    .arg( address ,32,2,QLatin1Char('0'));
+            itAddress->setStatusTip( tipAddress );
+            itAddress->setToolTip( tipAddress );
+            QTableWidgetItem* itValue = new QTableWidgetItem( QString("0x%1").arg(value,8,16,QLatin1Char('0')) );
+            QString tipValue = tr("Value: %1, 0b%2")
+                    .arg( value )
+                    .arg( value ,32,2,QLatin1Char('0'));
+            itValue->setStatusTip(tipValue);
+            itValue->setToolTip(tipValue);
+            int rowCount = ui->tableDataMemory->rowCount();
+            ui->tableDataMemory->setRowCount( rowCount + 1 );
+            ui->tableDataMemory->setItem( rowCount, 0, itAddress );
+            ui->tableDataMemory->setItem( rowCount, 1, itValue );
         }
     }
 }

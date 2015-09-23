@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1162</width>
-    <height>801</height>
+    <width>1019</width>
+    <height>771</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,85 +20,13 @@
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
   </property>
+  <property name="dockNestingEnabled">
+   <bool>true</bool>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QGroupBox" name="groupDataMemory">
-      <property name="title">
-       <string/>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QTableWidget" name="tableDataMemory">
-         <property name="minimumSize">
-          <size>
-           <width>216</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="palette">
-          <palette>
-           <active>
-            <colorrole role="Highlight">
-             <brush brushstyle="SolidPattern">
-              <color alpha="255">
-               <red>51</red>
-               <green>153</green>
-               <blue>255</blue>
-              </color>
-             </brush>
-            </colorrole>
-           </active>
-           <inactive>
-            <colorrole role="Highlight">
-             <brush brushstyle="SolidPattern">
-              <color alpha="255">
-               <red>255</red>
-               <green>255</green>
-               <blue>0</blue>
-              </color>
-             </brush>
-            </colorrole>
-           </inactive>
-           <disabled>
-            <colorrole role="Highlight">
-             <brush brushstyle="SolidPattern">
-              <color alpha="255">
-               <red>51</red>
-               <green>153</green>
-               <blue>255</blue>
-              </color>
-             </brush>
-            </colorrole>
-           </disabled>
-          </palette>
-         </property>
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-         <attribute name="horizontalHeaderDefaultSectionSize">
-          <number>100</number>
-         </attribute>
-         <attribute name="verticalHeaderVisible">
-          <bool>false</bool>
-         </attribute>
-         <column>
-          <property name="text">
-           <string>Address</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Value</string>
-          </property>
-         </column>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <layout class="QVBoxLayout" name="verticalLayout_5">
+     <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,2,0">
       <item>
        <widget class="QGroupBox" name="groupInstructionFormat">
         <property name="styleSheet">
@@ -801,6 +729,9 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
            </property>
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
            <property name="selectionBehavior">
             <enum>QAbstractItemView::SelectRows</enum>
            </property>
@@ -814,7 +745,10 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
             <bool>true</bool>
            </attribute>
            <attribute name="verticalHeaderDefaultSectionSize">
-            <number>30</number>
+            <number>22</number>
+           </attribute>
+           <attribute name="verticalHeaderMinimumSectionSize">
+            <number>22</number>
            </attribute>
            <column>
             <property name="text">
@@ -829,6 +763,96 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
            <column>
             <property name="text">
              <string>Instruction</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupDataMemory">
+        <property name="title">
+         <string/>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QTableWidget" name="tableDataMemory">
+           <property name="minimumSize">
+            <size>
+             <width>216</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="palette">
+            <palette>
+             <active>
+              <colorrole role="Highlight">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>51</red>
+                 <green>153</green>
+                 <blue>255</blue>
+                </color>
+               </brush>
+              </colorrole>
+             </active>
+             <inactive>
+              <colorrole role="Highlight">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>255</red>
+                 <green>255</green>
+                 <blue>0</blue>
+                </color>
+               </brush>
+              </colorrole>
+             </inactive>
+             <disabled>
+              <colorrole role="Highlight">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>51</red>
+                 <green>153</green>
+                 <blue>255</blue>
+                </color>
+               </brush>
+              </colorrole>
+             </disabled>
+            </palette>
+           </property>
+           <property name="sizeAdjustPolicy">
+            <enum>QAbstractScrollArea::AdjustToContents</enum>
+           </property>
+           <property name="editTriggers">
+            <set>QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+           <attribute name="horizontalHeaderDefaultSectionSize">
+            <number>96</number>
+           </attribute>
+           <attribute name="horizontalHeaderMinimumSectionSize">
+            <number>96</number>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderDefaultSectionSize">
+            <number>16</number>
+           </attribute>
+           <attribute name="verticalHeaderMinimumSectionSize">
+            <number>16</number>
+           </attribute>
+           <column>
+            <property name="text">
+             <string>Address</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Value</string>
             </property>
            </column>
           </widget>
@@ -897,6 +921,9 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
          </property>
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
          </property>
          <attribute name="horizontalHeaderDefaultSectionSize">
           <number>70</number>
@@ -1603,7 +1630,7 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1162</width>
+     <width>1019</width>
      <height>26</height>
     </rect>
    </property>
