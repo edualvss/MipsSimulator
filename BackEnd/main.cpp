@@ -122,7 +122,7 @@ void writeStepsInCSV(FILE* file, std::vector<CycleStatus *>* steps,
     fprintf(file,"\n%lu,%lu",simTimeSec,simTimeUSec);
 
     fprintf(file,"\nCycleNumber,currentPC,nextPC,instruction,rf_readAddress1,rf_readAddress2,rf_writeAddress,rf_dataIn,rf_dataOut1,rf_dataOut2,aluOp,aluIn1,aluIn2,aluZero,memDataOut,dvc,branch,jr,jal,dvi,regDst,memRead,memToReg,memWrite,aluSrc,regWrite,reg0,reg1,reg2,reg3,reg4,reg5,reg6,reg7,reg8,reg9,reg10,reg11,reg12,reg13,reg14,reg15,reg16,reg17,reg18,reg19,reg20,reg21,reg22,reg23,reg24,reg25,reg26,reg27,reg28,reg29,reg30,reg31");
-    fprintf(file,"\nmem1,mem2,mem3,...");
+    fprintf(file,"\naddr1|mem1,addr2|mem2,addr3|mem3,...");
     fprintf(file,"\n#");
 
     // To iterate in data memory
@@ -166,7 +166,7 @@ void writeStepsInCSV(FILE* file, std::vector<CycleStatus *>* steps,
         unsigned int memSize;
         memSize = cycle->dataMemory.size();
         for(it = cycle->dataMemory.begin(); it != cycle->dataMemory.end(); it++, x++) {
-            fprintf(file,"%u",it->second);
+            fprintf(file,"%u|%u",it->first,it->second);
             if( x < memSize-1 ) {
                 fprintf(file,",");
             }

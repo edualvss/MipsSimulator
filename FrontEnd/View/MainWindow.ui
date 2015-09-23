@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1019</width>
+    <width>1060</width>
     <height>771</height>
    </rect>
   </property>
@@ -47,6 +47,104 @@ margin-top: 1ex;</string>
            <property name="spacing">
             <number>0</number>
            </property>
+           <item row="2" column="3">
+            <widget class="QLabel" name="l_R_comment">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>22</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>22</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Arithmetic instruction format</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="label_9">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(0, 170, 255);
+color: rgb(255, 255, 255);
+font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
+             </property>
+             <property name="text">
+              <string>Fields</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_13">
+             <property name="minimumSize">
+              <size>
+               <width>62</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>62</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Field size</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QLabel" name="label_10">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(0, 170, 255);
+color: rgb(255, 255, 255);
+font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
+             </property>
+             <property name="text">
+              <string>Comments</string>
+             </property>
+            </widget>
+           </item>
            <item row="3" column="1">
             <layout class="QGridLayout" name="gridLayout_4">
              <property name="spacing">
@@ -172,103 +270,113 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="2">
-            <widget class="QLabel" name="l_R_comment">
+           <item row="2" column="0">
+            <widget class="QLabel" name="l_R_format">
              <property name="minimumSize">
               <size>
-               <width>0</width>
+               <width>62</width>
                <height>22</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>16777215</width>
+               <width>62</width>
                <height>22</height>
               </size>
              </property>
              <property name="text">
-              <string>Arithmetic instruction format</string>
+              <string>R-format</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_13">
+           <item row="3" column="0">
+            <widget class="QLabel" name="l_i_format">
              <property name="minimumSize">
               <size>
                <width>62</width>
-               <height>25</height>
+               <height>22</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>62</width>
-               <height>25</height>
+               <height>22</height>
               </size>
              </property>
              <property name="text">
-              <string>Field size</string>
+              <string>I-format</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="label_9">
+           <item row="4" column="0">
+            <widget class="QLabel" name="l_j_format">
              <property name="minimumSize">
               <size>
-               <width>0</width>
-               <height>30</height>
+               <width>62</width>
+               <height>22</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>16777215</width>
-               <height>30</height>
+               <width>62</width>
+               <height>22</height>
               </size>
              </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(0, 170, 255);
-color: rgb(255, 255, 255);
-font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Plain</enum>
-             </property>
              <property name="text">
-              <string>Fields</string>
+              <string>J-format</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QLabel" name="label_10">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>30</height>
-              </size>
+           <item row="4" column="1">
+            <layout class="QGridLayout" name="gridLayout_5">
+             <property name="spacing">
+              <number>0</number>
              </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color: rgb(0, 170, 255);
-color: rgb(255, 255, 255);
-font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
-             </property>
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Plain</enum>
-             </property>
-             <property name="text">
-              <string>Comments</string>
-             </property>
-            </widget>
+             <item row="0" column="0">
+              <widget class="QLabel" name="l_j_OP">
+               <property name="minimumSize">
+                <size>
+                 <width>58</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>58</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 249, 158);</string>
+               </property>
+               <property name="text">
+                <string>op</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="l_j_TARGETADDRESS">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(206, 206, 206);</string>
+               </property>
+               <property name="text">
+                <string>target address</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item row="1" column="1">
             <layout class="QGridLayout" name="gridLayout_2">
@@ -548,26 +656,7 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
              </item>
             </layout>
            </item>
-           <item row="3" column="2">
-            <widget class="QLabel" name="l_i_comment">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>22</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>22</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Transfer, branch, imm. format</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="2">
+           <item row="4" column="3">
             <widget class="QLabel" name="l_j_comment">
              <property name="minimumSize">
               <size>
@@ -586,7 +675,26 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="2">
+           <item row="3" column="3">
+            <widget class="QLabel" name="l_i_comment">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>22</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>22</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Transfer, branch, imm. format</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
             <widget class="QLabel" name="label_19">
              <property name="minimumSize">
               <size>
@@ -605,113 +713,54 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="l_R_format">
-             <property name="minimumSize">
-              <size>
-               <width>62</width>
-               <height>22</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>62</width>
-               <height>22</height>
-              </size>
+           <item row="0" column="2">
+            <widget class="QLabel" name="label">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(0, 170, 255);
+color: rgb(255, 255, 255);
+font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
              </property>
              <property name="text">
-              <string>R-format</string>
+              <string>Addressing Mode</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="l_i_format">
-             <property name="minimumSize">
-              <size>
-               <width>62</width>
-               <height>22</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>62</width>
-               <height>22</height>
-              </size>
+           <item row="2" column="2">
+            <widget class="QLabel" name="l_r_AddressingMode">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; font-style:italic;&quot;&gt;Register addressing&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;, where the operand is a register.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;:/icons/registerAddressing.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>I-format</string>
+              <string>Register</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="l_j_format">
-             <property name="minimumSize">
-              <size>
-               <width>62</width>
-               <height>22</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>62</width>
-               <height>22</height>
-              </size>
+           <item row="3" column="2">
+            <widget class="QLabel" name="l_i_AddressingMode">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; font-style:italic;&quot;&gt;Base&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; or &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-style:italic;&quot;&gt;displacement addressing&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;, where the operand is at the memory location whose address is the sum of a register and a constant in the instruction.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;:/icons/baseAddressing.png&quot;/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; font-style:italic;&quot;&gt;PC-relative addressing&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;, where the branch address is the sum of the PC and a constant in the instruction.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;:/icons/pcRelativeAddressing.png&quot;/&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; font-style:italic;&quot;&gt;Immediate addressing&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;, where the operand is a constant within the instruction itself.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;:/icons/immediateAddressing.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>J-format</string>
+              <string>Base, PC-relative, Imm.</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="1">
-            <layout class="QGridLayout" name="gridLayout_5">
-             <property name="spacing">
-              <number>0</number>
+           <item row="1" column="2">
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>Mips has 5 addr. modes</string>
              </property>
-             <item row="0" column="0">
-              <widget class="QLabel" name="l_j_OP">
-               <property name="minimumSize">
-                <size>
-                 <width>58</width>
-                 <height>22</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>58</width>
-                 <height>22</height>
-                </size>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 249, 158);</string>
-               </property>
-               <property name="text">
-                <string>op</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLabel" name="l_j_TARGETADDRESS">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>22</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>22</height>
-                </size>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">background-color: rgb(206, 206, 206);</string>
-               </property>
-               <property name="text">
-                <string>target address</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QLabel" name="l_j_AddressingMode">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; font-style:italic;&quot;&gt;Pseudodirect addressing&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;, where the jump address is the 26 bits of the instruction concatenated with the upper bits of the PC.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;:/icons/pseudodirectAddressing.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Pseudodirect</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
@@ -1630,7 +1679,7 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1019</width>
+     <width>1060</width>
      <height>26</height>
     </rect>
    </property>

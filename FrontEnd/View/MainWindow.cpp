@@ -3,7 +3,6 @@
 
 #include "AboutWindow.h"
 
-#include "Model/Instruction.h"
 #include "Model/CycleStatus.h"
 #include "Model/Decoder.h"
 #include "Model/RegisterFile.h"
@@ -17,6 +16,8 @@
 #ifdef DEBUG_METHODS
     #include <iostream>
 #endif
+
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -53,6 +54,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->restoreState(windowSettings.value("mainWindowState").toByteArray());
 
     ui->menuView->addActions( createPopupMenu()->actions() );
+
+    this->setAttribute(Qt::WA_AlwaysShowToolTips,true);
 
 }
 
@@ -262,10 +265,14 @@ void MainWindow::updateDataTable(std::map<unsigned int, unsigned int> *dataMem) 
     std::cout << "MainWindow::updateDataTable" << std::endl;
 #endif
 
+    if( dataMem->empty() ) {
+        return;
+    }
+
     std::map<unsigned int, unsigned int>::iterator it;
     for( it = dataMem->begin(); it != dataMem->end(); it++ ) {
         unsigned int address = it->first;
-        unsigned int value = it->first;
+        unsigned int value = it->second;
         QString search = QString("0x%1").arg(address,8,16,QLatin1Char('0'));
         QList<QTableWidgetItem*> items = ui->tableDataMemory->findItems(search,Qt::MatchFixedString);
         if( items.size() > 0 ) { // If item already exists
@@ -328,6 +335,7 @@ void MainWindow::updateInstructionFormat(Instruction *ins) {
 
             // Update I format
             this->updateInstructionIFormat(ins->getOp(),ins->getRs(),ins->getRt(),ins->getImed16());
+            this->updateInstructionIAddressingMode( ins->getAddressingMode() );
 
             break;
         }
@@ -456,6 +464,43 @@ void MainWindow::updateInstructionJFormat(unsigned int op, unsigned int imed26) 
 
 }
 
+void MainWindow::updateInstructionIAddressingMode(Instruction::AddressingMode mode) {
+#ifdef DEBUG_METHODS
+    std::cout << "MainWindow::updateInstructionIAddressingMode" << std::endl;
+#endif
+
+    switch(mode) {
+        case Instruction::Base:
+            ui->l_i_AddressingMode->setText(tr("Base"));
+            ui->l_i_AddressingMode->setToolTip(tr("<p><span style=\" font-size:11pt; font-style:italic;\">" \
+                                                  "Base</span><span style=\" font-size:11pt;\"> or </span>" \
+                                                  "<span style=\" font-size:11pt; font-style:italic;\">" \
+                                                  "displacement addressing</span><span style=\" font-size:11pt;\">" \
+                                                  ", where the operand is at the memory location whose address is the " \
+                                                  "sum of a register and a constant in the instruction.</span></p>" \
+                                                  "<p><img src=\":/icons/baseAddressing.png\"/></p>"));
+            break;
+        case Instruction::Immediate:
+            ui->l_i_AddressingMode->setText(tr("Immediate"));
+            ui->l_i_AddressingMode->setToolTip(tr("<p><span style=\" font-size:11pt; font-style:italic;\">"\
+                                                  "Immediate addressing</span><span style=\" font-size:11pt;\">," \
+                                                  " where the operand is a constant within the instruction itself." \
+                                                  "</span></p><p><img src=\":/icons/immediateAddressing.png\"/></p>"));
+            break;
+        case Instruction::PC_relative:
+            ui->l_i_AddressingMode->setText(tr("PC-relative"));
+            ui->l_i_AddressingMode->setToolTip(tr("<p><span style=\" font-size:11pt; font-style:italic;\">" \
+                                                  "PC-relative addressing</span><span style=\" font-size:11pt;\">" \
+                                                  ", where the branch address is the sum of the PC and a " \
+                                                  "constant in the instruction.</span></p>" \
+                                                  "<p><img src=\":/icons/pcRelativeAddressing.png\"/></p>"));
+            break;
+        case Instruction::Register:
+        case Instruction::Pseudodirect:break;
+    }
+
+}
+
 void MainWindow::setEnabledRFormatView(bool enabled) {
 #ifdef DEBUG_METHODS
     std::cout << "MainWindow::setEnabledRFormatView" << std::endl;
@@ -468,6 +513,7 @@ void MainWindow::setEnabledRFormatView(bool enabled) {
     ui->l_r_SHAMT->setVisible(enabled);
     ui->l_R_comment->setVisible(enabled);
     ui->l_R_format->setVisible(enabled);
+    ui->l_r_AddressingMode->setVisible(enabled);
 
 }
 
@@ -481,6 +527,7 @@ void MainWindow::setEnabledIFormatView(bool enabled) {
     ui->l_i_OP->setVisible(enabled);
     ui->l_i_RS->setVisible(enabled);
     ui->l_i_RT->setVisible(enabled);
+    ui->l_i_AddressingMode->setVisible(enabled);
 
 }
 
@@ -492,6 +539,7 @@ void MainWindow::setEnabledJFormatView(bool enabled) {
     ui->l_j_format->setVisible(enabled);
     ui->l_j_OP->setVisible(enabled);
     ui->l_j_TARGETADDRESS->setVisible(enabled);
+    ui->l_j_AddressingMode->setVisible(enabled);
 
 }
 

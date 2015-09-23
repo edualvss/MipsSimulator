@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "Model/Instruction.h"
 
 namespace Ui {
     class MainWindow;
@@ -10,7 +11,6 @@ namespace Ui {
 class RegisterFile;
 class QTableWidget;
 class CycleStatus;
-class Instruction;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -60,6 +60,7 @@ private:
                                   unsigned int shamt,unsigned int function);
     void updateInstructionIFormat(unsigned int op, unsigned int rs,
                                   unsigned int rt, unsigned int imed16);
+    void updateInstructionIAddressingMode(Instruction::AddressingMode mode);
     void updateInstructionJFormat(unsigned int op, unsigned int imed26);
     void setEnabledRFormatView(bool);
     void setEnabledIFormatView(bool);

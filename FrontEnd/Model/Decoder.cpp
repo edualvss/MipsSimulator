@@ -180,10 +180,14 @@ Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
             break;
         }
         case 0b000100: { // beq
+            ins->setAddressingMode(Instruction::PC_relative);
+            ins->setAddressingModeName( Instruction::ADDRESSING_MODE_NAME[Instruction::PC_relative] );
             ins->setInstructionMnemonic("beq");
             break;
         }
         case 0b000101: { // bne
+            ins->setAddressingMode(Instruction::PC_relative);
+            ins->setAddressingModeName( Instruction::ADDRESSING_MODE_NAME[Instruction::PC_relative] );
             ins->setInstructionMnemonic("bne");
             break;
         }
@@ -192,7 +196,7 @@ Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
             break;
         }
         case 0b001010: { // slti
-            ins->setInstructionMnemonic("beq");
+            ins->setInstructionMnemonic("slti");
             break;
         }
         case 0b001100: { // andi

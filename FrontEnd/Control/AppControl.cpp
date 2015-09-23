@@ -273,6 +273,7 @@ void AppControl::loadStepsInCSV() {
 
     for( int i = 5; i < lines.size(); i+=2 ) {
         CycleStatus* cycle = new CycleStatus();
+        // General status
         QByteArray lineI = lines.at(i);
         lineI = lineI.simplified();
         QList<QByteArray> fieldsLineI = lineI.split(',');
@@ -303,16 +304,23 @@ void AppControl::loadStepsInCSV() {
         cycle->aluSrc = fieldsLineI[24].toUInt();
         cycle->regWrite = fieldsLineI[25].toUInt();
 
+        // Register file
         for( int x = 0; x < 32; x++) {
             cycle->rf_registers[x] = fieldsLineI[26+x].toUInt();
         }
 
+        // Data Memory
         QByteArray lineI2 = lines.at(i+1);
         lineI2 = lineI2.simplified();
         QList<QByteArray> fieldsLineI2 = lineI2.split(',');
         for( int x = 0; x < fieldsLineI2.size(); x++ ) {
-            unsigned int address = x*4 + 0x10010000;
-            cycle->insert( address, fieldsLineI2[x].toUInt() );
+            QList<QByteArray> memPos = fieldsLineI2.at(x).split('|');
+            if( memPos.isEmpty() || memPos.size() < 2 ) {
+                continue;
+            }
+            unsigned int address = memPos.at(0).toUInt(); // Address
+            unsigned int value = memPos.at(1).toUInt(); // Value
+            cycle->insert( address, value );
         }
 
         newSteps->push_back(cycle);

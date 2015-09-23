@@ -8,5 +8,10 @@
         <file>icons/simulate.png</file>
         <file>icons/time.png</file>
         <file>icons/author.png</file>
+        <file>icons/baseAddressing.png</file>
+        <file>icons/immediateAddressing.png</file>
+        <file>icons/pcRelativeAddressing.png</file>
+        <file>icons/pseudodirectAddressing.png</file>
+        <file>icons/registerAddressing.png</file>
     </qresource>
 </RCC>
