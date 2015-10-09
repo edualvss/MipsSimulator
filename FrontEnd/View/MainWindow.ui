@@ -1769,7 +1769,7 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
     <string>Load Data</string>
    </property>
    <property name="statusTip">
-    <string>Load a file with data to data memory</string>
+    <string>Load a file with data in hexadecimal to data memory</string>
    </property>
   </action>
   <action name="actionExit">
