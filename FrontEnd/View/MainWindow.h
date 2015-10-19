@@ -27,6 +27,8 @@ public:
     void showMessageInStatusBar(QString msg,int timeout);
     void updateStatus(CycleStatus* );
 
+    void updateInstructionCounter(QMap<unsigned int, unsigned int>* counter);
+
     void setEnabledSimulate(bool enabled);
     void setEnabledSimulationTime(bool enabled);
     void resetRegisterFileTable();

@@ -53,6 +53,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->menuView->addActions( createPopupMenu()->actions() );
 
+    // Stretch instruction column
+    ui->tableInstructionMemory->setColumnWidth(2,400);
     this->setAttribute(Qt::WA_AlwaysShowToolTips,true);
 
 }
@@ -560,6 +562,30 @@ void MainWindow::showMessageInStatusBar(QString msg, int timeout) {
     std::cout << "MainWindow::showMessageInStatusBar" << std::endl;
 #endif
     ui->statusbar->showMessage(msg,timeout);
+}
+
+void MainWindow::updateInstructionCounter(QMap<unsigned int, unsigned int> *counter) {
+#ifdef DEBUG_METHODS
+    std::cout << "MainWindow::updateInstructionCounter" << std::endl;
+#endif
+
+    QMapIterator<unsigned int, unsigned int> it(*counter);
+    int i = 0;
+    while( it.hasNext() ) {
+        it.next();
+//        unsigned int pc = it.key();
+        unsigned int count = it.value();
+        // TODO Maybe this will be fixed if counter map is out of order
+        // ui->tableInstructionMemory->findItems("....");
+        QTableWidgetItem* item = ui->tableInstructionMemory->item(i,3);
+        if( item == 0 ) {
+            ui->tableInstructionMemory->setItem(i,3, new QTableWidgetItem( QString::number(count) ) );
+        } else {
+            item->setText( QString::number(count) );
+        }
+        i++;
+    }
+
 }
 
 void MainWindow::showAbout() {

@@ -29,6 +29,9 @@ private:
 
     void loadStepsInJson();
     void loadStepsInCSV();
+
+    QMap<unsigned int,unsigned int>* countInstructionAccess();
+
 public:
     explicit AppControl(QObject *parent = 0);
 

@@ -94,8 +94,15 @@ void AppControl::endSimulation() {
 
     this->loadStepsInCSV();
 
+
     this->mainWindow->resetRegisterFileTable();
     QApplication::restoreOverrideCursor();
+
+    QMap<unsigned int,unsigned int>* counter = this->countInstructionAccess();
+    this->mainWindow->updateInstructionCounter(counter);
+    counter->clear();
+    delete counter;
+
     mipsProcess->deleteLater();
     this->mainWindow->showMessage( tr("Simulated in: %1 s and %2 us")
                                    .arg(QString::number(simulationTimeS))
@@ -107,6 +114,27 @@ void AppControl::endSimulation() {
     simulated = true;
     this->mainWindow->setEnabledSimulationTime(simulated);
     this->mainWindow->setEnabledSimulate(true);
+
+}
+
+QMap<unsigned int, unsigned int>* AppControl::countInstructionAccess() {
+#ifdef DEBUG_METHODS
+    std::cout << "AppControl::countInstructionAccess" << std::endl;
+#endif
+
+    // Key: PC | Value: Frequency
+    QMap<unsigned int, unsigned int>* counter = new QMap<unsigned int,unsigned int>();
+    for(unsigned int i = 1; i < steps->size(); i++) {
+        CycleStatus* cycle = steps->at(i);
+        unsigned int pcValue = cycle->currentPC;
+        if( counter->contains(pcValue) ) {
+            counter->insert(pcValue,counter->value(pcValue) + 1);
+        } else {
+            counter->insert(pcValue,1);
+        }
+    }
+
+    return counter;
 
 }
 
