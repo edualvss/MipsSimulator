@@ -16,7 +16,6 @@ Last update on:
 #define REGISTERFILE_H
 
 #include <systemc>
-#include <string>
 
 using namespace sc_core;
 using namespace sc_dt;
@@ -25,7 +24,7 @@ class RegisterFile : public sc_module {
 public:
 
     // Registers names
-    static const std::string REG_NAMES[32];
+    static const char* REG_NAMES[32];
 
     // Interface
     sc_in<bool>          i_CLK;         // Clock
@@ -46,9 +45,9 @@ public:
     void p_write();
 
     // Auxiliar member functions
-    int getPosition(std::string );
+    int getPosition(const char* );
     sc_uint<32> getRegisterValue(int pos);
-    sc_uint<32> getRegisterValue(std::string regName);
+    sc_uint<32> getRegisterValue(const char* regName);
     sc_uint<32> *getRegistersValues();
     void debug();
 

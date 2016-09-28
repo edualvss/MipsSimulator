@@ -8,15 +8,15 @@ FILE   : Instruction.cpp
 
 #include "Instruction.h"
 
-#include <stdio.h>
-
 #include <iostream>
+#include <cstdio>
+#include <cstring>
 
-const std::string Instruction::INSTRUCTION_FORMAT_NAME[3] = {
+const char* Instruction::INSTRUCTION_FORMAT_NAME[3] = {
     "R","I","J"
 };
 
-const std::string Instruction::ADDRESSING_MODE_NAME[5] = {
+const char* Instruction::ADDRESSING_MODE_NAME[5] = {
     "Register","Base","Immediate","PC-relative","Pseudodirect"
 };
 
@@ -27,50 +27,40 @@ Instruction::Instruction(unsigned int instruction) : instruction(instruction) {
 
 }
 
-#include <sstream>
-#include <string>
-#include <ostream>
-
-std::string Instruction::getFormatedInstruction() {
+char *Instruction::getFormattedInstruction() {
 #ifdef DEBUG_METHODS
-    std::cout << "Instruction::getFormatedInstruction" << std::endl;
+    std::cout << "Instruction::getFormattedInstruction" << std::endl;
 #endif
 
-    std::string str;
-    std::stringstream ss;
+    char* str = new char[30];
 
-    ss << "0x" << std::uppercase << std::hex;
-
-    if( insMnemonic.compare("nop") == 0) {
-        return insMnemonic;
+    if( strcmp(insMnemonic,"nop") == 0) {
+        sprintf(str,"%s",insMnemonic);
+        return str;
     }
 
     switch( this->format ) {
         case R:
-            str = insMnemonic + "\t" + rdRegName + ", " + rsRegName + ", " + rtRegName;
-            if( (insMnemonic.compare("sll") == 0) || (insMnemonic.compare("srl") == 0) ) {
-                ss << _shamt;
-                str = insMnemonic + "\t" + rdRegName + ", " + rsRegName + ", " + ss.str();
+            sprintf(str,"%s\t%s, %s, %s",insMnemonic,rdRegName,rsRegName,rtRegName);
+            if( (strcmp(insMnemonic,"sll") == 0) || (strcmp(insMnemonic,"srl") == 0) ) {
+                sprintf(str,"%s\t%s, %s, %X",insMnemonic,rdRegName,rsRegName,_shamt);
             } else {
-                if( insMnemonic.compare("jr") == 0 ) {
-                    str = insMnemonic + "\t" + rsRegName;
-                } else if(insMnemonic.compare("syscall") == 0) {
-                    str = "syscall";
+                if( strcmp(insMnemonic,"jr") == 0 ) {
+                    sprintf(str,"%s\t%s",insMnemonic,rsRegName);
+                } else if(strcmp(insMnemonic,"syscall") == 0) {
+                    sprintf(str,"syscall");
                 }
             }
             break;
         case I:
-            if( (insMnemonic.compare("lw") == 0) || (insMnemonic.compare("sw") == 0) ) {
-                ss << _imed16;
-                str = insMnemonic + "\t" + rtRegName + ", " + ss.str() + "(" + rsRegName + ")";
+            if( (strcmp(insMnemonic,"lw") == 0) || (strcmp(insMnemonic,"sw") == 0) ) {
+                sprintf(str,"%s\t%s, %X(%s)",insMnemonic,rtRegName,_imed16,rsRegName);
             } else {
-                ss << _imed16;
-                str = insMnemonic + "\t" + rtRegName + ", " + rsRegName + "," + ss.str();
+                sprintf(str,"%s\t%s, %s, %X",insMnemonic,rtRegName,rsRegName,_imed16);
             }
             break;
         case J:
-            ss << _imed26;
-            str = insMnemonic + "\t" + ss.str();
+            sprintf(str,"%s\t%X",insMnemonic,_imed26);
             break;
     }
 
@@ -82,6 +72,8 @@ void Instruction::debug() {
     std::cout << "Instruction::debug" << std::endl;
 #endif
 
-    std::cout << "\nInstruction is: " << getFormatedInstruction() << std::endl;
+    char* formattedIns = getFormattedInstruction();
+    std::cout << "\nInstruction is: " << formattedIns << std::endl;
 
+    delete[] formattedIns;
 }

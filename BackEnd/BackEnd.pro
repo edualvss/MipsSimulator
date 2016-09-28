@@ -5,7 +5,7 @@ CONFIG -= qt
 
 TARGET = SysMips
 
-SYSTEMC_PATH= c:/SystemC
+SYSTEMC_PATH= C:/SystemC
 
 mac {
     DESTDIR = ../FrontEnd/bin/SimMips.app/Contents/MacOS/Simulator
@@ -32,7 +32,7 @@ SOURCES += main.cpp \
 INCLUDEPATH = $${SYSTEMC_PATH}/include
 
 win32 {
-  LIBS += $${SYSTEMC_PATH}/lib-mingw/libsystemc.a
+  LIBS += -L$${SYSTEMC_PATH}/lib-mingw -lsystemc
 }
 
 unix {

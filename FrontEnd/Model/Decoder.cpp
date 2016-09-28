@@ -64,7 +64,7 @@ Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
      *  % Not implemented
      */
 
-    unsigned int op =  (instruction >> 26) & 0b111111;
+    unsigned int op = (instruction >> 26) & 0b111111;
     unsigned int rs = (instruction >> 21) & 0b11111;
     unsigned int rt = (instruction >> 16) & 0b11111;
     unsigned int rd = (instruction >> 11) & 0b11111;
@@ -73,9 +73,7 @@ Instruction* Decoder::getInstructionDecoded(unsigned int instruction) {
     unsigned int imed26 = instruction & 0x3FFFFFF;
     unsigned int imed16 = instruction & 0xFFFF;
 
-
     Instruction* ins = new Instruction(instruction);
-
     ins->setOp(op);
     ins->setRs(rs);
     ins->setRt(rt);

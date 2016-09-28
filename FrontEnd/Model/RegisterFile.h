@@ -22,10 +22,10 @@ class RegisterFile {
 public:
 
     // Registers names
-    static const std::string REG_NAMES[32];
+    static const char* REG_NAMES[32];
 
     // Auxiliar functions
-    static int getPosition(std::string );
+    static int getPosition(const char* );
 
 };
 

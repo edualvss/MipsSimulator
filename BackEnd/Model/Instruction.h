@@ -16,14 +16,12 @@ Last update on:
 #ifndef INSTRUCTION_H
 #define INSTRUCTION_H
 
-#include <string>
-
 class Instruction {
 public:
     enum InstructionFormat { R=0,  // Arithmetic instruction format
                              I,    // Transfer, branch, immediate format
                              J };  // Jump instruction format
-    static const std::string INSTRUCTION_FORMAT_NAME[3];
+    static const char* INSTRUCTION_FORMAT_NAME[3];
 
     enum InstructionFields {OP=0,      // Ins[31..26] - 6-bit
                             RS,        // Ins[25..21] - 5-bit
@@ -39,22 +37,22 @@ public:
                          Immediate,       // Immediate - Where the operand is a constant within the instruction itself
                          PC_relative,     // PC-relative - Where the address is the sum of the PC and a constant in the instruction
                          Pseudodirect };  // Pseudodirect - Where the jump address is the 26-bit of the instruction concatenated with upper bits of the PC
-    static const std::string ADDRESSING_MODE_NAME[5];
+    static const char* ADDRESSING_MODE_NAME[5];
 
     Instruction(unsigned int instruction);
 
     // Gets
     inline InstructionFormat getFormat             () { return format            ; }
-    inline std::string       getFormatName         () { return formatName        ; }
+    inline const char*       getFormatName         () { return formatName        ; }
     inline AddressingMode    getAddressingMode     () { return addressingMode    ; }
-    inline std::string       getAddressingModeName () { return addressingModeName; }
-    inline std::string       getInstructionMnemonic() { return insMnemonic       ; }
+    inline const char*       getAddressingModeName () { return addressingModeName; }
+    inline const char*       getInstructionMnemonic() { return insMnemonic       ; }
     inline unsigned int      getOp                 () { return _op               ; }
-    inline std::string       getRsName             () { return rsRegName         ; }
+    inline const char*       getRsName             () { return rsRegName         ; }
     inline unsigned int      getRs                 () { return _rs               ; }
-    inline std::string       getRtName             () { return rtRegName         ; }
+    inline const char*       getRtName             () { return rtRegName         ; }
     inline unsigned int      getRt                 () { return _rt               ; }
-    inline std::string       getRdName             () { return rdRegName         ; }
+    inline const char*       getRdName             () { return rdRegName         ; }
     inline unsigned int      getRd                 () { return _rd               ; }
     inline unsigned int      getShamt              () { return _shamt            ; }
     inline unsigned int      getFunction           () { return _function         ; }
@@ -64,16 +62,16 @@ public:
 
     // Sets
     inline void setFormat             (InstructionFormat insForm   ) { format             = insForm  ; }
-    inline void setFormatName         (std::string       name      ) { formatName         = name     ; }
+    inline void setFormatName         (const char*       name      ) { formatName         = name     ; }
     inline void setAddressingMode     (AddressingMode    mode      ) { addressingMode     = mode     ; }
-    inline void setAddressingModeName (std::string       name      ) { addressingModeName = name     ; }
-    inline void setInstructionMnemonic(std::string       mnemonic  ) { insMnemonic        = mnemonic ; }
+    inline void setAddressingModeName (const char*       name      ) { addressingModeName = name     ; }
+    inline void setInstructionMnemonic(const char*       mnemonic  ) { insMnemonic        = mnemonic ; }
     inline void setOp                 (unsigned int      op        ) { _op                = op       ; }
-    inline void setRsName             (std::string       rsName    ) { rsRegName          = rsName   ; }
+    inline void setRsName             (const char*       rsName    ) { rsRegName          = rsName   ; }
     inline void setRs                 (unsigned int      rs        ) {  _rs               = rs       ; }
-    inline void setRtName             (std::string       rtName    ) { rtRegName          = rtName   ; }
+    inline void setRtName             (const char*       rtName    ) { rtRegName          = rtName   ; }
     inline void setRt                 (unsigned int      rt        ) {  _rt               = rt       ; }
-    inline void setRdName             (std::string       rdName    ) { rdRegName          = rdName   ; }
+    inline void setRdName             (const char*       rdName    ) { rdRegName          = rdName   ; }
     inline void setRd                 (unsigned int      rd        ) {  _rd               = rd       ; }
     inline void setShamt              (unsigned int      shamt     ) {  _shamt            = shamt    ; }
     inline void setFunction           (unsigned int      function  ) {  _function         = function ; }
@@ -81,7 +79,7 @@ public:
     inline void setImed26             (unsigned int      imed26    ) {  _imed26           = imed26   ; }
     inline void setInstruction        (unsigned int      ins       ) { instruction        = ins      ; }
 
-    std::string getFormatedInstruction();
+    char *getFormattedInstruction();
 
     void debug();
 
@@ -90,18 +88,18 @@ private:
     unsigned int instruction;
 
     InstructionFormat format;
-    std::string formatName;
+    const char* formatName;
 
     AddressingMode addressingMode;
-    std::string addressingModeName;
+    const char* addressingModeName;
 
-    std::string insMnemonic;
+    const char* insMnemonic;
     unsigned int  _op;
-    std::string rsRegName;
+    const char* rsRegName;
     unsigned int  _rs;
-    std::string rtRegName;
+    const char* rtRegName;
     unsigned int  _rt;
-    std::string rdRegName;
+    const char* rdRegName;
     unsigned int  _rd;
     unsigned int  _shamt;
     unsigned int  _function;

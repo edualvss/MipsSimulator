@@ -199,9 +199,10 @@ void MainWindow::loadInstructionMemory(std::vector<unsigned int> *instructions) 
         ui->tableInstructionMemory->setItem( i,0, new QTableWidgetItem(QString("0x%1").arg(address,8,16,QLatin1Char('0'))) );
         ui->tableInstructionMemory->setItem( i,1, new QTableWidgetItem( QString("%1").arg(instruction,8,16,QLatin1Char('0')) ) );
         Instruction* ins = Decoder::getInstructionDecoded(instruction);
-        ui->tableInstructionMemory->setItem(i,2, new QTableWidgetItem(QString::fromStdString(ins->getFormatedInstruction())));
+        char* formattedIns = ins->getFormattedInstruction();
+        ui->tableInstructionMemory->setItem(i,2, new QTableWidgetItem(QString::fromStdString(formattedIns)));
+        delete[] formattedIns;
     }
-
 }
 
 int MainWindow::rowOfPC(unsigned int pc) {

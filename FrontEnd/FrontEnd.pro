@@ -1,5 +1,10 @@
-QT = core gui widgets
 TEMPLATE = app
+
+QT       = core gui
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets # Qt 5
+
+CONFIG += qt
+
 
 HEADERS += \
     View/MainWindow.h \

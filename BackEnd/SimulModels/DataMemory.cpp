@@ -98,7 +98,7 @@ bool DataMemory::initialize(const char *filename) {
     do {
         int hexValue;
         scanResult = fscanf(file,"%x",&hexValue);
-        m_DATA.insert( std::pair<unsigned int, sc_int<32> >(address,hexValue) );
+        m_DATA.insert( std::pair<unsigned int, sc_uint<32> >(address,hexValue) );
         address += 4; // +4 addresses
     } while( scanResult != EOF );
 

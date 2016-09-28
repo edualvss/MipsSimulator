@@ -23,8 +23,6 @@ public:
 
     static Instruction* getInstructionDecoded(unsigned int instruction);
     static Instruction* getInstructionDecoded(Instruction* ins);
-
-
 };
 
 #endif // DECODER_H

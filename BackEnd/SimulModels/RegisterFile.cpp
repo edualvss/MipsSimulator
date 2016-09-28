@@ -9,7 +9,7 @@ FILE   : RegisterFile.cpp
 #include "RegisterFile.h"
 
 // Register names by position in array
-const std::string RegisterFile::REG_NAMES[32] =    \
+const char* RegisterFile::REG_NAMES[32] =    \
         {"$zero","$at","$v0","$v1","$a0",\
         "$a1","$a2","$a3","$t0","$t1",   \
         "$t2","$t3","$t4","$t5","$t6",   \
@@ -83,7 +83,7 @@ sc_uint<32> RegisterFile::getRegisterValue(int pos) {
     return m_REGISTERS[pos];
 }
 
-sc_uint<32> RegisterFile::getRegisterValue(std::string regName) {
+sc_uint<32> RegisterFile::getRegisterValue(const char *regName) {
 #ifdef DEBUG_METHODS
     std::cout << "RegisterFile::getRegisterValue" << std::endl;
 #endif
@@ -97,13 +97,13 @@ sc_uint<32> RegisterFile::getRegisterValue(std::string regName) {
 }
 
 
-int RegisterFile::getPosition(std::string regName) {
+int RegisterFile::getPosition(const char* regName) {
 #ifdef DEBUG_METHODS
     std::cout << "RegisterFile::getPosition" << std::endl;
 #endif
 
     for( int i = 0; i < 32; i++ ) {
-        if( regName.compare(REG_NAMES[i]) == 0) {
+        if( strcmp(regName,REG_NAMES[i]) == 0) {
             return i;
         }
     }
