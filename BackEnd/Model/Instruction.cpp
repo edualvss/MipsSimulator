@@ -43,7 +43,7 @@ char *Instruction::getFormattedInstruction() {
         case R:
             sprintf(str,"%s\t%s, %s, %s",insMnemonic,rdRegName,rsRegName,rtRegName);
             if( (strcmp(insMnemonic,"sll") == 0) || (strcmp(insMnemonic,"srl") == 0) ) {
-                sprintf(str,"%s\t%s, %s, %X",insMnemonic,rdRegName,rsRegName,_shamt);
+                sprintf(str,"%s\t%s, %s, 0x%X",insMnemonic,rdRegName,rsRegName,_shamt);
             } else {
                 if( strcmp(insMnemonic,"jr") == 0 ) {
                     sprintf(str,"%s\t%s",insMnemonic,rsRegName);
@@ -54,13 +54,13 @@ char *Instruction::getFormattedInstruction() {
             break;
         case I:
             if( (strcmp(insMnemonic,"lw") == 0) || (strcmp(insMnemonic,"sw") == 0) ) {
-                sprintf(str,"%s\t%s, %X(%s)",insMnemonic,rtRegName,_imed16,rsRegName);
+                sprintf(str,"%s\t%s, 0x%X(%s)",insMnemonic,rtRegName,_imed16,rsRegName);
             } else {
-                sprintf(str,"%s\t%s, %s, %X",insMnemonic,rtRegName,rsRegName,_imed16);
+                sprintf(str,"%s\t%s, %s, 0x%X",insMnemonic,rtRegName,rsRegName,_imed16);
             }
             break;
         case J:
-            sprintf(str,"%s\t%X",insMnemonic,_imed26);
+            sprintf(str,"%s\t0x%X",insMnemonic,_imed26);
             break;
     }
 
