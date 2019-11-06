@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/app_icon.png</file>
+        <file>icons/binary-code.png</file>
+        <file>icons/hexsudoku.png</file>
+        <file>icons/next.png</file>
+        <file>icons/previous.png</file>
+        <file>icons/simulate.png</file>
+        <file>icons/time.png</file>
+        <file>icons/author.png</file>
+        <file>icons/baseAddressing.png</file>
+        <file>icons/immediateAddressing.png</file>
+        <file>icons/pcRelativeAddressing.png</file>
+        <file>icons/pseudodirectAddressing.png</file>
+        <file>icons/registerAddressing.png</file>
+    </qresource>
+</RCC>
